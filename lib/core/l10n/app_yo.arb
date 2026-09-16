@@ -1,0 +1,13 @@
+{
+  "@@locale": "yo",
+  "sendMoneyTitle": "Fi Owo Ranse",
+  "recipientStepTitle": "Ta ni o n fi ranse si?",
+  "amountStepTitle": "Elo ni?",
+  "confirmStepTitle": "Jeri gbigbe owo",
+  "recipientLabel": "Akaunti tabi @orukọ olugba",
+  "amountLabel": "Iye owo",
+  "continueButton": "Tesiwaju",
+  "confirmSendButton": "Jeri & Fi ranse",
+  "pendingOffline": "N dúró — yóò fi ránṣẹ́ nígbà tí nẹ́tíwọ̀ọ̀kì bá padà",
+  "sendSuccess": "O ti fi ranse ni aseyori"
+}

@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "sendMoneyTitle": "Send Money",
+  "recipientStepTitle": "Who are you sending to?",
+  "amountStepTitle": "How much?",
+  "confirmStepTitle": "Confirm transfer",
+  "recipientLabel": "Recipient account or @tag",
+  "amountLabel": "Amount",
+  "continueButton": "Continue",
+  "confirmSendButton": "Confirm & Send",
+  "pendingOffline": "Pending — will send when back online",
+  "sendSuccess": "Sent successfully"
+}
