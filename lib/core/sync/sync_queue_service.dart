@@ -117,6 +117,10 @@ class SyncQueueService {
       await db.recordFailedAttempt(row.idempotencyKey, e.toString(), maxSyncAttempts);
       onActionFailedTerminally?.call(action, e.toString());
       return true;
+    } on GoalAlreadyReachedException catch (e) {
+      await db.recordFailedAttempt(row.idempotencyKey, e.toString(), maxSyncAttempts);
+      onActionFailedTerminally?.call(action, e.toString());
+      return true;
     } on NovaPayServerException catch (e) {
       await db.recordFailedAttempt(row.idempotencyKey, e.toString(), row.attempts);
       final refreshed = await db.pendingActions();

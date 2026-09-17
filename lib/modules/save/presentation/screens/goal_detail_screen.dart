@@ -42,7 +42,10 @@ class GoalDetailScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(saved.format(), style: Theme.of(context).textTheme.headlineMedium),
-                      if (data.hasPendingContribution) const StatusBadge(label: 'Pending', tone: BadgeTone.pending),
+                      if (data.hasPendingContribution)
+                        const StatusBadge(label: 'Pending', tone: BadgeTone.pending)
+                      else if (data.displaySavedAmount >= goal.targetAmount)
+                        const StatusBadge(label: 'Reached', tone: BadgeTone.success),
                     ],
                   ),
                   Text('of ${target.format()} target', style: const TextStyle(color: AppColors.textSecondary)),
@@ -52,7 +55,9 @@ class GoalDetailScreen extends StatelessWidget {
                   Text('${(progress * 100).round()}% complete', style: const TextStyle(color: AppColors.textSecondary)),
                   const SizedBox(height: 4),
                   Text(
-                    goal.isComplete ? 'Goal reached! 🎉' : '${remaining.format()} left to reach your target',
+                    data.displaySavedAmount >= goal.targetAmount
+                        ? 'Goal reached! 🎉'
+                        : '${remaining.format()} left to reach your target',
                     style: const TextStyle(color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: 4),
@@ -67,15 +72,17 @@ class GoalDetailScreen extends StatelessWidget {
             SizedBox(
               height: 52,
               child: ElevatedButton(
-                onPressed: () => showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: AppColors.surface,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                  ),
-                  builder: (_) => ContributeSheet(goalId: goal.id, goalName: goal.name),
-                ),
+                onPressed: data.displaySavedAmount >= goal.targetAmount
+                    ? null
+                    : () => showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: AppColors.surface,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                        ),
+                        builder: (_) => ContributeSheet(goalId: goal.id, goalName: goal.name),
+                      ),
                 child: const Text('Contribute'),
               ),
             ),

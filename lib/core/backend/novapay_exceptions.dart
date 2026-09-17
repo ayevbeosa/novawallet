@@ -24,6 +24,11 @@ class GoalNotFoundException implements Exception {
   String toString() => 'GoalNotFoundException: savings goal no longer exists';
 }
 
+class GoalAlreadyReachedException implements Exception {
+  @override
+  String toString() => 'GoalAlreadyReachedException: savings goal has already been reached';
+}
+
 class ConnectivityLostMidRequest implements Exception {
   const ConnectivityLostMidRequest();
 }

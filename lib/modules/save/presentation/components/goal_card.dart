@@ -36,7 +36,9 @@ class GoalCard extends StatelessWidget {
                 if (data.hasPendingContribution)
                   const StatusBadge(label: 'Pending', tone: BadgeTone.pending)
                 else if (data.hasFailedContribution)
-                  const StatusBadge(label: 'Failed', tone: BadgeTone.failure),
+                  const StatusBadge(label: 'Failed', tone: BadgeTone.failure)
+                else if (data.displaySavedAmount >= goal.targetAmount)
+                  const StatusBadge(label: 'Reached', tone: BadgeTone.success),
               ],
             ),
             const SizedBox(height: 12),

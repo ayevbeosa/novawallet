@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:novawallet/core/backend/fake_novapay_api.dart';
+import 'package:novawallet/core/backend/novapay_exceptions.dart';
 import 'package:novawallet/core/database/app_database.dart';
 import 'package:novawallet/core/sync/queued_action.dart';
 import 'package:novawallet/core/sync/sync_queue_service.dart' show SyncQueueService;
@@ -88,6 +89,14 @@ class SaveRepository {
     required String goalName,
     required int amountKobo,
   }) async {
+    final goalRow = await _db.getGoalRow(goalId);
+    if (goalRow != null) {
+      final goal = SavingsGoal.fromRow(goalRow);
+      if (goal.isComplete) {
+        throw GoalAlreadyReachedException();
+      }
+    }
+
     final idempotencyKey = _uuid.v4();
     final action = ContributeGoalAction(
       idempotencyKey: idempotencyKey,

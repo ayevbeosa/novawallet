@@ -195,6 +195,7 @@ class FakeNovaPayApi {
 
     final goal = _goals[action.goalId];
     if (goal == null) throw GoalNotFoundException();
+    if (goal.isComplete) throw GoalAlreadyReachedException();
     if (action.amount > _balance) throw InsufficientFundsException();
 
     _balance -= action.amount;
