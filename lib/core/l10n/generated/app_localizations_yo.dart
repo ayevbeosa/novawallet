@@ -12,6 +12,21 @@ class AppLocalizationsYo extends AppLocalizations {
   String get appTitle => 'NovaWallet';
 
   @override
+  String get wallet => 'Wálẹ́ẹ̀tì';
+
+  @override
+  String get availableBalance => 'Owó tó wà';
+
+  @override
+  String get pendingActivity => 'Ìgbòkègbodò tó ń dúró';
+
+  @override
+  String get loading => 'Ń kò';
+
+  @override
+  String get goalProgress => 'Ìtẹ̀síwájú ìfojúsùn';
+
+  @override
   String get novaSave => 'NovaSave';
 
   @override
@@ -218,4 +233,19 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get from => 'láti';
+
+  @override
+  String get errorValidRecipient => 'Tẹ olugba to wulo';
+
+  @override
+  String get errorAmountZero => 'Tẹ iye ti o ju ₦0 lọ';
+
+  @override
+  String get errorGoalName => 'Fun ìfojúsùn rẹ ni orúkọ';
+
+  @override
+  String get errorTargetAmount => 'Ṣeto iye ìfojúsùn ti o ju ₦0 lọ';
+
+  @override
+  String get errorTargetDate => 'Yan ọjọ́ ìfojúsùn';
 }

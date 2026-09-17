@@ -104,6 +104,36 @@ abstract class AppLocalizations {
   /// **'NovaWallet'**
   String get appTitle;
 
+  /// No description provided for @wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get wallet;
+
+  /// No description provided for @availableBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Available balance'**
+  String get availableBalance;
+
+  /// No description provided for @pendingActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending activity'**
+  String get pendingActivity;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get loading;
+
+  /// No description provided for @goalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal progress'**
+  String get goalProgress;
+
   /// No description provided for @novaSave.
   ///
   /// In en, this message translates to:
@@ -462,6 +492,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'from'**
   String get from;
+
+  /// No description provided for @errorValidRecipient.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid recipient'**
+  String get errorValidRecipient;
+
+  /// No description provided for @errorAmountZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount greater than ₦0'**
+  String get errorAmountZero;
+
+  /// No description provided for @errorGoalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Give your goal a name'**
+  String get errorGoalName;
+
+  /// No description provided for @errorTargetAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a target amount greater than ₦0'**
+  String get errorTargetAmount;
+
+  /// No description provided for @errorTargetDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a target date'**
+  String get errorTargetDate;
 }
 
 class _AppLocalizationsDelegate

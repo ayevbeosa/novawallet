@@ -93,10 +93,16 @@ class _ContributeSheetState extends State<ContributeSheet> {
             children: [
               Text(l10n.contribute, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 16),
-              AmountField(autofocus: true, onChangedKobo: _cubit.setAmountKobo),
+              AmountField(label: l10n.amountLabel, autofocus: true, onChangedKobo: _cubit.setAmountKobo),
               if (state.validationError != null) ...[
                 const SizedBox(height: 8),
-                Text(state.validationError!, style: const TextStyle(color: AppColors.red)),
+                Text(
+                  switch (state.validationError) {
+                    'errorAmountZero' => l10n.errorAmountZero,
+                    _ => state.validationError!,
+                  },
+                  style: const TextStyle(color: AppColors.red),
+                ),
               ],
               const SizedBox(height: 20),
               SizedBox(

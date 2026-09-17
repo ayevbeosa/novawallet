@@ -1,6 +1,11 @@
 {
   "@@locale": "yo",
   "appTitle": "NovaWallet",
+  "wallet": "Wálẹ́ẹ̀tì",
+  "availableBalance": "Owó tó wà",
+  "pendingActivity": "Ìgbòkègbodò tó ń dúró",
+  "loading": "Ń kò",
+  "goalProgress": "Ìtẹ̀síwájú ìfojúsùn",
   "novaSave": "NovaSave",
   "settings": "Ètò",
   "send": "Fi ránṣẹ́",

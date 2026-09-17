@@ -15,15 +15,15 @@ class CreateGoalCubit extends CubitSignal<CreateGoalState> {
 
   Future<void> submit() async {
     if (value.name.trim().length < 2) {
-      emit(value.copyWith(validationError: 'Give your goal a name'));
+      emit(value.copyWith(validationError: 'errorGoalName'));
       return;
     }
     if (value.targetAmount <= 0) {
-      emit(value.copyWith(validationError: 'Set a target amount greater than ₦0'));
+      emit(value.copyWith(validationError: 'errorTargetAmount'));
       return;
     }
     if (value.targetDate == null) {
-      emit(value.copyWith(validationError: 'Pick a target date'));
+      emit(value.copyWith(validationError: 'errorTargetDate'));
       return;
     }
     emit(value.copyWith(isSubmitting: true, clearValidationError: true));

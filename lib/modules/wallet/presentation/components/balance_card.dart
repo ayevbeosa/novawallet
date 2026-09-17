@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/money/money.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/glow_card.dart';
@@ -23,6 +24,7 @@ class BalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final money = Money.fromKobo(balance);
+    final l10n = AppLocalizations.of(context)!;
     return GlowCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,14 +32,14 @@ class BalanceCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Available balance', style: Theme.of(context).textTheme.bodyMedium),
-              if (hasPending) const StatusBadge(label: 'Pending activity', tone: BadgeTone.pending),
+              Text(l10n.availableBalance, style: Theme.of(context).textTheme.bodyMedium),
+              if (hasPending) StatusBadge(label: l10n.pendingActivity, tone: BadgeTone.pending),
             ],
           ),
           const SizedBox(height: 10),
           Semantics(
-            label: 'Available balance',
-            value: loading ? 'Loading' : money.format(),
+            label: l10n.availableBalance,
+            value: loading ? l10n.loading : money.format(),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerLeft,

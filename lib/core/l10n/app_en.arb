@@ -1,6 +1,11 @@
 {
   "@@locale": "en",
   "appTitle": "NovaWallet",
+  "wallet": "Wallet",
+  "availableBalance": "Available balance",
+  "pendingActivity": "Pending activity",
+  "loading": "Loading",
+  "goalProgress": "Goal progress",
   "novaSave": "NovaSave",
   "settings": "Settings",
   "send": "Send",

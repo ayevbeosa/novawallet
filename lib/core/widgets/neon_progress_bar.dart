@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 
 /// A progress bar for savings-goal completion. [progress] must already be
@@ -14,9 +15,10 @@ class NeonProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final clamped = progress.clamp(0.0, 1.0);
+    final l10n = AppLocalizations.of(context)!;
     return Semantics(
-      label: 'Goal progress',
-      value: '${(clamped * 100).round()} percent',
+      label: l10n.goalProgress,
+      value: '${(clamped * 100).round()}%',
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(

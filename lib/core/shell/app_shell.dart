@@ -1,6 +1,7 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/shell/sync_status_cubit.dart';
 import 'package:novawallet/core/widgets/offline_banner.dart';
 
@@ -14,6 +15,7 @@ class AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final syncStatus = context.value<SyncStatusCubit, SyncStatusState>();
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -32,14 +34,14 @@ class AppShell extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,
         onTap: navigationShell.goBranch,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet_rounded),
-            label: 'Wallet',
+            icon: const Icon(Icons.account_balance_wallet_rounded),
+            label: l10n.wallet,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.savings_rounded),
-            label: 'NovaSave',
+            icon: const Icon(Icons.savings_rounded),
+            label: l10n.novaSave,
           ),
         ],
       ),

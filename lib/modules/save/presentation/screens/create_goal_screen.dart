@@ -86,7 +86,15 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                   ),
                   if (state.validationError != null) ...[
                     const SizedBox(height: 12),
-                    Text(state.validationError!, style: const TextStyle(color: AppColors.red)),
+                    Text(
+                      switch (state.validationError) {
+                        'errorGoalName' => l10n.errorGoalName,
+                        'errorTargetAmount' => l10n.errorTargetAmount,
+                        'errorTargetDate' => l10n.errorTargetDate,
+                        _ => state.validationError!,
+                      },
+                      style: const TextStyle(color: AppColors.red),
+                    ),
                   ],
                   const Spacer(),
                   SizedBox(
