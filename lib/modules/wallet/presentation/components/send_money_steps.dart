@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/money/money.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/amount_field.dart';
+import 'package:novawallet/core/widgets/app_text_form_field.dart';
 import 'package:novawallet/core/widgets/glow_card.dart';
 import 'package:novawallet/modules/wallet/presentation/cubits/send_money_cubit.dart';
 
@@ -62,18 +64,17 @@ class _RecipientStepState extends State<RecipientStep> {
       children: [
         Text(l10n.recipientStepTitle, style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 16),
-        Semantics(
-          textField: true,
+        AppTextFormField(
           label: l10n.recipientLabel,
-          child: TextField(
-            autofocus: true,
-            controller: _controller,
-            decoration: InputDecoration(
-              labelText: l10n.recipientLabel,
-              hintText: 'e.g. 0123456789 or @chidinma',
-            ),
-            onChanged: widget.cubit.setRecipient,
-          ),
+          autofocus: true,
+          controller: _controller,
+          hintText: 'Account number',
+          textInputType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(10),
+          ],
+          onChanged: widget.cubit.setRecipient,
         ),
       ],
     );

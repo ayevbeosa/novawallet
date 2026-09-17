@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppTextFormField extends StatelessWidget {
   const AppTextFormField({
@@ -11,6 +12,8 @@ class AppTextFormField extends StatelessWidget {
     this.onChanged,
     this.textCapitalization = TextCapitalization.none,
     this.prefixIcon,
+    this.textInputType,
+    this.inputFormatters,
     super.key,
   });
 
@@ -23,6 +26,8 @@ class AppTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final TextCapitalization textCapitalization;
   final Widget? prefixIcon;
+  final TextInputType? textInputType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,9 @@ class AppTextFormField extends StatelessWidget {
               autofocus: autofocus,
               onChanged: onChanged,
               onTap: onTap,
+              keyboardType: textInputType,
               textCapitalization: textCapitalization,
+              inputFormatters: inputFormatters,
               style: Theme.of(context).textTheme.titleMedium,
               decoration: InputDecoration(
                 hintText: hintText,
