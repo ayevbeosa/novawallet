@@ -52,7 +52,9 @@ class ConnectivityService {
     _controller.add(online);
   }
 
-  bool _toOnline(List<ConnectivityResult> results) => results.any((r) => r != ConnectivityResult.none);
+  /// Only mobile data and Wi-Fi count as "online"
+  bool _toOnline(List<ConnectivityResult> results) =>
+      results.any((r) => r == ConnectivityResult.mobile || r == ConnectivityResult.wifi);
 
   void dispose() {
     if (_subscription != null) unawaited(_subscription!.cancel());
