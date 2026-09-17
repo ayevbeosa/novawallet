@@ -1,10 +1,7 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:novawallet/core/money/money_input_parser.dart';
 
-/// A Naira amount entry field. Every keystroke is parsed through
-/// [parseNairaInputToKobo] (string/int math only) before reaching
-/// [onChangedKobo] — the widget never hands a `double` to its caller.
 class AmountField extends StatelessWidget {
   const AmountField({
     required this.onChangedKobo,
@@ -13,7 +10,7 @@ class AmountField extends StatelessWidget {
     this.autofocus = false,
   });
 
-  final ValueChanged<int?> onChangedKobo;
+  final ValueChanged<int> onChangedKobo;
   final String label;
   final bool autofocus;
 
@@ -23,19 +20,26 @@ class AmountField extends StatelessWidget {
       textField: true,
       label: label,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8,
         children: [
           Text(label),
           TextField(
             autofocus: autofocus,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9.,]'))],
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              CurrencyTextInputFormatter.currency(
+                locale: 'en',
+                symbol: '',
+                decimalDigits: 2,
+                enableNegative: false,
+                onChange: (formatted) {
+                  onChangedKobo(parseNairaInputToKobo(formatted) ?? 0);
+                },
+              ),
+            ],
             style: Theme.of(context).textTheme.headlineMedium,
             decoration: const InputDecoration(prefixText: '₦ '),
-            onChanged: (input) {
-              final kobo = parseNairaInputToKobo(input);
-              onChangedKobo(kobo);
-            },
           ),
         ],
       ),
