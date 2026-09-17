@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:novawallet/core/backend/fake_novapay_api.dart';
 import 'package:novawallet/core/connectivity/connectivity_service.dart';
+import 'package:novawallet/core/database/app_database.dart';
 import 'package:novawallet/core/di/service_locator.dart';
-import 'package:novawallet/core/storage/app_database.dart';
 import 'package:novawallet/modules/save/data/repositories/save_repository.dart';
 import 'package:novawallet/modules/save/presentation/components/contribute_sheet.dart';
 
 import '../test_utils/settle.dart';
 
-// Deliberately no SyncQueueService here — see the comment in
-// test/widget/send_money_flow_test.dart for why.
 void main() {
   late SaveRepository repository;
 
@@ -48,8 +46,7 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pump();
-    // The modal bottom sheet's slide-up transition is ~250ms; settle()'s
-    // 50ms isn't enough for it to land before the first tap inside it.
+
     await tester.pump(const Duration(milliseconds: 300));
   }
 

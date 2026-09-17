@@ -3,22 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:novawallet/core/backend/fake_novapay_api.dart';
 import 'package:novawallet/core/connectivity/connectivity_service.dart';
+import 'package:novawallet/core/database/app_database.dart';
 import 'package:novawallet/core/di/service_locator.dart';
 import 'package:novawallet/core/l10n/generated/app_localizations.dart';
-import 'package:novawallet/core/storage/app_database.dart';
 import 'package:novawallet/modules/wallet/data/repositories/wallet_repository.dart';
 import 'package:novawallet/modules/wallet/presentation/screens/send_money_flow_screen.dart';
 
 import '../test_utils/settle.dart';
 
-// Deliberately no SyncQueueService here: this file tests the Send Money
-// *UI flow* (steps, validation, queuing). The queue's drain-to-synced
-// guarantee, backoff, and exactly-once behaviour are covered exhaustively
-// in test/unit/sync_queue_service_test.dart and re-verified end-to-end in
-// integration_test/offline_queue_sync_test.dart — both run outside the
-// widget-test harness, which can't cleanly finalize a test that leaves a
-// live `AppDatabase.watchQueue()` subscription (as a running
-// `SyncQueueService` does) open for the whole test body.
 void main() {
   setUp(() async {
     await resetServiceLocatorForTest();
@@ -35,10 +27,10 @@ void main() {
   tearDown(resetServiceLocatorForTest);
 
   Widget wrap() => const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: SendMoneyFlowScreen(),
-      );
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: SendMoneyFlowScreen(),
+  );
 
   testWidgets('completing Recipient → Amount → Confirm queues the transfer with the entered details', (
     tester,
@@ -52,9 +44,11 @@ void main() {
     await tester.tap(find.widgetWithText(ElevatedButton, 'Continue'));
     await settle(tester);
 
-    // Step 2: amount.
+    // Step 2: amount. The amount field is a calculator-style keypad — the
+    // digits typed shift in as kobo cents from the right (500000 → ₦5,000.00),
+    // they aren't parsed as a free-text Naira figure.
     expect(find.text('How much?'), findsOneWidget);
-    await tester.enterText(find.byType(TextField).first, '5000');
+    await tester.enterText(find.byType(TextField).first, '500000');
     await tester.tap(find.widgetWithText(ElevatedButton, 'Continue'));
     await settle(tester);
 

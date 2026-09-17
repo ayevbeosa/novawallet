@@ -24,11 +24,11 @@ void main() {
     await db.close();
   });
 
-  SendMoneyAction sendAction(String key, {int amountKobo = 100000}) => SendMoneyAction(
+  SendMoneyAction sendAction(String key, {int amount = 100000}) => SendMoneyAction(
     idempotencyKey: key,
     createdAt: DateTime.now(),
     recipient: '0123456789',
-    amount: amountKobo,
+    amount: amount,
   );
 
   group('SyncQueueService', () {
@@ -138,7 +138,7 @@ void main() {
       expect(row.nextRetryAt, isNotNull, reason: 'must back off, not retry in a tight loop');
 
       // Simulate the backoff window having elapsed for each remaining
-      // attempt, draining once per elapsed window — never a hot loop.
+      // attempt, draining once per elapsed window.
       for (var i = 1; i < maxSyncAttempts; i++) {
         await db.retryFailedAction('flaky-key');
         await sync.drain();
