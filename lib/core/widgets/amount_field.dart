@@ -26,7 +26,7 @@ class AmountField extends StatelessWidget {
           Text(label),
           TextFormField(
             autofocus: autofocus,
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               CurrencyTextInputFormatter.currency(
                 locale: 'en',
@@ -39,8 +39,12 @@ class AmountField extends StatelessWidget {
               ),
             ],
             style: Theme.of(context).textTheme.headlineMedium,
-            decoration: const InputDecoration(
-              prefixText: '₦ ',
+            decoration: InputDecoration(
+              prefixIcon: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 12, 6, 12),
+                child: Text('₦', style: Theme.of(context).textTheme.headlineMedium),
+              ),
+              prefixIconConstraints: const BoxConstraints(),
               hintText: '0.00',
             ),
           ),

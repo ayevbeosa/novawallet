@@ -3,17 +3,13 @@ import 'dart:async';
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:novawallet/core/di/service_locator.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/amount_field.dart';
-import 'package:novawallet/modules/save/presentation/components/target_date_picker.dart';
+import 'package:novawallet/core/widgets/app_text_form_field.dart';
 import 'package:novawallet/modules/save/presentation/cubits/create_goal_cubit.dart';
 
-/// Owns its `CreateGoalCubit` directly — created via the `late final`
-/// initializer, closed in `dispose()` — the same as `SendMoneyFlowScreen`
-/// does; this screen was already a `StatefulWidget` for its
-/// `TextEditingController`, so there's no reason to also nest a separate
-/// `BlocSignalProvider` wrapper widget around it.
 class CreateGoalScreen extends StatefulWidget {
   const CreateGoalScreen({super.key});
 
@@ -24,10 +20,12 @@ class CreateGoalScreen extends StatefulWidget {
 class _CreateGoalScreenState extends State<CreateGoalScreen> {
   late final _cubit = CreateGoalCubit(repository: getIt());
   final _nameController = TextEditingController();
+  final _dateController = TextEditingController();
 
   @override
   void dispose() {
     _nameController.dispose();
+    _dateController.dispose();
     unawaited(_cubit.close());
     super.dispose();
   }
@@ -51,17 +49,12 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Semantics(
-                    textField: true,
+                  AppTextFormField(
                     label: 'Goal name',
-                    child: TextField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Goal name',
-                        hintText: 'e.g. Japa fund',
-                      ),
-                      onChanged: _cubit.setName,
-                    ),
+                    controller: _nameController,
+                    hintText: 'e.g. Japa fund',
+                    onChanged: _cubit.setName,
+                    textCapitalization: TextCapitalization.sentences,
                   ),
                   const SizedBox(height: 16),
                   AmountField(
@@ -69,9 +62,25 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                     onChangedKobo: _cubit.setTargetAmountKobo,
                   ),
                   const SizedBox(height: 16),
-                  TargetDatePicker(
-                    targetDate: state.targetDate,
-                    onPick: _cubit.setTargetDate,
+                  AppTextFormField(
+                    controller: _dateController,
+                    readOnly: true,
+                    label: 'Pick a target date',
+                    hintText: 'Target date',
+                    prefixIcon: const Icon(Icons.calendar_month_rounded),
+                    onTap: () async {
+                      final now = DateTime.now();
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: now.add(const Duration(days: 90)),
+                        firstDate: now.add(const Duration(days: 1)),
+                        lastDate: now.add(const Duration(days: 365 * 5)),
+                      );
+                      if (picked != null) {
+                        _cubit.setTargetDate(picked);
+                        _dateController.text = DateFormat('dd, MMM yyyy').format(picked);
+                      }
+                    },
                   ),
                   if (state.validationError != null) ...[
                     const SizedBox(height: 12),
