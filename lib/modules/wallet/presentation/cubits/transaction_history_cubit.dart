@@ -13,6 +13,23 @@ class TransactionHistoryCubit extends CubitSignal<TransactionHistoryState> {
   final WalletRepository _repository;
   int _nextPage = 0;
 
+  Future<void> refresh() async {
+    emit(value.copyWith(clearError: true));
+    try {
+      await _repository.refresh();
+      _nextPage = 0;
+      emit(const TransactionHistoryState(isLoadingFirstPage: true));
+      await loadNextPage();
+    } on Exception {
+      emit(
+        value.copyWith(
+          isLoadingFirstPage: false,
+          errorMessage: 'Refresh failed — try again',
+        ),
+      );
+    }
+  }
+
   Future<void> loadNextPage() async {
     if (value.isLoadingNextPage || !value.hasMore) return;
     emit(value.copyWith(isLoadingNextPage: true, clearError: true));

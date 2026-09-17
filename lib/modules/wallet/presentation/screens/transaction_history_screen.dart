@@ -44,30 +44,35 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('All transactions')),
-      body: BlocSignalBuilder<TransactionHistoryCubit, TransactionHistoryState>(
-        bloc: _cubit,
-        builder: (context, state) {
-          if (state.isLoadingFirstPage) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.transactions.isEmpty) {
-            return const Center(child: Text('No transactions yet'));
-          }
-          return ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            itemCount: state.transactions.length + 1,
-            itemBuilder: (context, index) {
-              if (index == state.transactions.length) {
-                return _FooterIndicator(state: state, onRetry: _cubit.loadNextPage);
-              }
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: TransactionTile(transaction: state.transactions[index]),
-              );
-            },
-          );
-        },
+      body: RefreshIndicator(
+        color: AppColors.cyan,
+        backgroundColor: AppColors.surface,
+        onRefresh: _cubit.refresh,
+        child: BlocSignalBuilder<TransactionHistoryCubit, TransactionHistoryState>(
+          bloc: _cubit,
+          builder: (context, state) {
+            if (state.isLoadingFirstPage) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state.transactions.isEmpty) {
+              return const Center(child: Text('No transactions yet'));
+            }
+            return ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+              itemCount: state.transactions.length + 1,
+              itemBuilder: (context, index) {
+                if (index == state.transactions.length) {
+                  return _FooterIndicator(state: state, onRetry: _cubit.loadNextPage);
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: TransactionTile(transaction: state.transactions[index]),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
