@@ -12,11 +12,10 @@ class NotificationService {
 
   Future<void> initialize() async {
     if (_initialized) return;
-    _plugin.isNotificationAllowed().then((isAllowed) async {
-      if (!isAllowed) {
-        await AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+    final isAllowed = await _plugin.isNotificationAllowed();
+    if (!isAllowed) {
+      await _plugin.requestPermissionToSendNotifications();
+    }
 
     await _plugin.initialize(
       null,

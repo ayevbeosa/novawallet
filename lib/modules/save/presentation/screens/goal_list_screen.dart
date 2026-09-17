@@ -20,16 +20,22 @@ class GoalListScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliverAppBar(
+          const SliverAppBar(
             floating: true,
-            title: const Text('NovaSave'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.add_circle_outline_rounded),
-                tooltip: 'New goal',
-                onPressed: () => context.push('/save/create'),
+            title: Text('NovaSave'),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+            sliver: SliverToBoxAdapter(
+              child: SizedBox(
+                height: 52,
+                child: ElevatedButton.icon(
+                  onPressed: () => context.push('/save/create'),
+                  icon: const Icon(Icons.add_circle_outline_rounded),
+                  label: const Text('Create a savings goal'),
+                ),
               ),
-            ],
+            ),
           ),
           if (state.goals.isEmpty)
             const SliverFillRemaining(

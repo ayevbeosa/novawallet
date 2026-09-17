@@ -1,6 +1,7 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:novawallet/core/di/service_locator.dart';
+import 'package:novawallet/core/settings/locale_cubit.dart';
 import 'package:novawallet/core/shell/sync_status_cubit.dart';
 import 'package:novawallet/modules/save/presentation/cubits/save_goals_cubit.dart';
 import 'package:novawallet/modules/wallet/presentation/cubits/wallet_cubit.dart';
@@ -25,6 +26,7 @@ class AppProviders extends StatelessWidget {
         BlocSignalProvider<SyncStatusCubit>(
           create: (_) => SyncStatusCubit(db: getIt(), connectivity: getIt()),
         ),
+        BlocSignalProvider<LocaleCubit>(create: (_) => LocaleCubit()),
       ],
       child: child,
     );

@@ -28,9 +28,9 @@ class WalletHomeScreen extends StatelessWidget {
             title: const Text('NovaWallet'),
             actions: [
               IconButton(
-                icon: const Icon(Icons.send_rounded),
-                tooltip: 'Send money',
-                onPressed: () => context.push('/send'),
+                icon: const Icon(Icons.settings_outlined),
+                tooltip: 'Settings',
+                onPressed: () => context.push('/settings'),
               ),
             ],
           ),
@@ -43,6 +43,32 @@ class WalletHomeScreen extends StatelessWidget {
                 accountNumber: data?.wallet?.accountNumber,
                 hasPending: data?.hasPendingActions ?? false,
                 loading: state.status == WalletStatus.loading,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _QuickActionButton(
+                      icon: Icons.north_east_rounded,
+                      label: 'Send',
+                      color: AppColors.cyan,
+                      onTap: () => context.push('/send'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _QuickActionButton(
+                      icon: Icons.savings_rounded,
+                      label: 'Save',
+                      color: AppColors.magenta,
+                      onTap: () => context.push('/save/create'),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -86,6 +112,51 @@ class WalletHomeScreen extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _QuickActionButton extends StatelessWidget {
+  const _QuickActionButton({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: label,
+      child: Material(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: color.withValues(alpha: 0.5)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color),
+                const SizedBox(height: 6),
+                Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
