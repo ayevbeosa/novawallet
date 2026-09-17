@@ -15,7 +15,7 @@ class GoalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final goal = data.goal;
-    final saved = Money.fromKobo(data.displaySavedAmountKobo);
+    final saved = Money.fromKobo(data.displaySavedAmount);
     final target = Money.fromKobo(goal.targetAmount);
     final progress = saved.progressTowards(target);
 

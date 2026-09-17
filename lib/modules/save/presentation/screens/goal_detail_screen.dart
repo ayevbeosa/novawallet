@@ -22,7 +22,7 @@ class GoalDetailScreen extends StatelessWidget {
     }
     final data = match.first;
     final goal = data.goal;
-    final saved = Money.fromKobo(data.displaySavedAmountKobo);
+    final saved = Money.fromKobo(data.displaySavedAmount);
     final target = Money.fromKobo(goal.targetAmount);
     final progress = saved.progressTowards(target);
     final remaining = target - saved;
