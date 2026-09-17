@@ -35,8 +35,8 @@ class SendResultView extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 offline
-                    ? "Your transfer to ${state.recipient} is queued locally and hasn't left the device yet."
-                    : 'Your transfer to ${state.recipient} has been queued and will confirm in a moment.',
+                    ? l10n.sendResultOfflineBody(state.recipient)
+                    : l10n.sendResultOnlineBody(state.recipient),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: AppColors.textSecondary),
               ),
@@ -46,7 +46,7 @@ class SendResultView extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () => context.go(AppRoutes.wallet),
-                  child: const Text('Done'),
+                  child: Text(l10n.done),
                 ),
               ),
             ],

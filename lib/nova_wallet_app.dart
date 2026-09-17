@@ -13,9 +13,6 @@ class NovaWalletApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppProviders(
-      // A Builder so this inner context sits *below* AppProviders — reading
-      // LocaleCubit here (to drive MaterialApp.router's own `locale`) needs
-      // a descendant context, not the one this widget was built with.
       child: Builder(
         builder: (context) {
           final localeCode = context.value<LocaleCubit, String>();
@@ -26,13 +23,6 @@ class NovaWalletApp extends StatelessWidget {
             themeMode: ThemeMode.dark,
             routerConfig: appRouter,
             locale: Locale(localeCode),
-            // Appended after the standard delegates so these win for
-            // MaterialLocalizations/CupertinoLocalizations/
-            // WidgetsLocalizations specifically when the locale is 'yo' —
-            // Flutter's own framework strings don't ship a Yoruba
-            // translation, so without this every Material widget crashes
-            // with "No MaterialLocalizations found" the moment the locale
-            // switches. See yoruba_delegate.dart.
             localizationsDelegates: const [
               ...AppLocalizations.localizationsDelegates,
               YorubaDelegateFix(),

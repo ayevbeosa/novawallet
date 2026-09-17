@@ -1,5 +1,7 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/money/money.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/glow_card.dart';
@@ -17,8 +19,10 @@ class GoalDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.value<SaveGoalsCubit, SaveGoalsState>();
     final match = state.goals.where((g) => g.goal.id == goalId);
+    final l10n = AppLocalizations.of(context)!;
+
     if (match.isEmpty) {
-      return const Scaffold(body: Center(child: Text('Goal not found')));
+      return Scaffold(body: Center(child: Text(l10n.goalNotFound)));
     }
     final data = match.first;
     final goal = data.goal;
@@ -43,26 +47,29 @@ class GoalDetailScreen extends StatelessWidget {
                     children: [
                       Text(saved.format(), style: Theme.of(context).textTheme.headlineMedium),
                       if (data.hasPendingContribution)
-                        const StatusBadge(label: 'Pending', tone: BadgeTone.pending)
+                        StatusBadge(label: l10n.pendingOffline, tone: BadgeTone.pending)
                       else if (data.displaySavedAmount >= goal.targetAmount)
-                        const StatusBadge(label: 'Reached', tone: BadgeTone.success),
+                        StatusBadge(label: l10n.reached, tone: BadgeTone.success),
                     ],
                   ),
-                  Text('of ${target.format()} target', style: const TextStyle(color: AppColors.textSecondary)),
+                  Text(l10n.ofTarget(target.format()), style: const TextStyle(color: AppColors.textSecondary)),
                   const SizedBox(height: 16),
                   NeonProgressBar(progress: progress),
                   const SizedBox(height: 10),
-                  Text('${(progress * 100).round()}% complete', style: const TextStyle(color: AppColors.textSecondary)),
-                  const SizedBox(height: 4),
                   Text(
-                    data.displaySavedAmount >= goal.targetAmount
-                        ? 'Goal reached! 🎉'
-                        : '${remaining.format()} left to reach your target',
+                    l10n.percentComplete((progress * 100).round()),
                     style: const TextStyle(color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Target date: ${goal.targetDate.year}-${goal.targetDate.month.toString().padLeft(2, '0')}-${goal.targetDate.day.toString().padLeft(2, '0')}',
+                    data.displaySavedAmount >= goal.targetAmount
+                        ? l10n.goalReached
+                        : l10n.leftToReachTarget(remaining.format()),
+                    style: const TextStyle(color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.targetDateLabel(DateFormat('yyyy-MM-dd').format(goal.targetDate)),
                     style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
                   ),
                 ],
@@ -83,7 +90,7 @@ class GoalDetailScreen extends StatelessWidget {
                         ),
                         builder: (_) => ContributeSheet(goalId: goal.id, goalName: goal.name),
                       ),
-                child: const Text('Contribute'),
+                child: Text(l10n.contribute),
               ),
             ),
           ],

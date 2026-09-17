@@ -29,13 +29,13 @@ class SendMoneyCubit extends CubitSignal<SendMoneyState> {
     switch (value.step) {
       case SendMoneyStep.recipient:
         if (!value.canContinueFromRecipient) {
-          emit(value.copyWith(validationError: 'Enter a valid recipient'));
+          emit(value.copyWith(validationError: 'errorValidRecipient'));
           return;
         }
         emit(value.copyWith(step: SendMoneyStep.amount, clearValidationError: true));
       case SendMoneyStep.amount:
         if (!value.canContinueFromAmount) {
-          emit(value.copyWith(validationError: 'Enter an amount greater than ₦0'));
+          emit(value.copyWith(validationError: 'errorAmountZero'));
           return;
         }
         emit(value.copyWith(step: SendMoneyStep.confirm, clearValidationError: true));

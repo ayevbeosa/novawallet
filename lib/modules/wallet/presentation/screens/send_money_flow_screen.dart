@@ -63,7 +63,11 @@ class _SendMoneyFlowScreenState extends State<SendMoneyFlowScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Text(
-                        state.validationError!,
+                        switch (state.validationError) {
+                          'errorValidRecipient' => l10n.errorValidRecipient,
+                          'errorAmountZero' => l10n.errorAmountZero,
+                          _ => state.validationError!,
+                        },
                         style: const TextStyle(color: AppColors.red),
                       ),
                     ),

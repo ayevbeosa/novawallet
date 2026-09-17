@@ -8,6 +8,7 @@ import 'package:novawallet/core/di/service_locator.dart';
 import 'package:novawallet/modules/save/data/repositories/save_repository.dart';
 import 'package:novawallet/modules/save/presentation/components/contribute_sheet.dart';
 
+import '../test_utils/l10n.dart';
 import '../test_utils/settle.dart';
 
 void main() {
@@ -30,8 +31,8 @@ void main() {
 
   Future<void> pumpSheet(WidgetTester tester, String goalId) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
+      wrapWithL10n(
+        Scaffold(
           body: Builder(
             builder: (context) => ElevatedButton(
               onPressed: () => showModalBottomSheet<void>(

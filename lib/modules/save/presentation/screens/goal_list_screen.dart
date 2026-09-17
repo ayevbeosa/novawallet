@@ -1,6 +1,7 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/router/app_routes.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/modules/save/presentation/components/goal_card.dart';
@@ -13,6 +14,7 @@ class GoalListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<SaveGoalsCubit>();
     final state = context.value<SaveGoalsCubit, SaveGoalsState>();
+    final l10n = AppLocalizations.of(context)!;
 
     return RefreshIndicator(
       color: AppColors.cyan,
@@ -21,9 +23,9 @@ class GoalListScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          const SliverAppBar(
+          SliverAppBar(
             floating: true,
-            title: Text('NovaSave'),
+            title: Text(l10n.novaSave),
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -33,15 +35,15 @@ class GoalListScreen extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () => context.push(AppRoutes.createGoal),
                   icon: const Icon(Icons.add_circle_outline_rounded),
-                  label: const Text('Create a savings goal'),
+                  label: Text(l10n.createSavingsGoal),
                 ),
               ),
             ),
           ),
           if (state.goals.isEmpty)
-            const SliverFillRemaining(
+            SliverFillRemaining(
               hasScrollBody: false,
-              child: Center(child: Text('No savings goals yet — create one')),
+              child: Center(child: Text(l10n.noGoalsYet)),
             )
           else
             SliverPadding(

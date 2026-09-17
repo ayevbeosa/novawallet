@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/money/money.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/status_badge.dart';
@@ -16,17 +17,26 @@ class TransactionTile extends StatelessWidget {
     final money = Money.fromKobo(transaction.amount);
     final sign = isCredit ? '+' : '-';
     final amountColor = isCredit ? AppColors.green : AppColors.textPrimary;
+    final l10n = AppLocalizations.of(context)!;
 
     final (badgeLabel, badgeTone) = switch (transaction.status) {
       TransactionStatus.completed => (null, null),
-      TransactionStatus.pending => ('Pending', BadgeTone.pending),
-      TransactionStatus.failed => ('Failed', BadgeTone.failure),
+      TransactionStatus.pending => (l10n.pending, BadgeTone.pending),
+      TransactionStatus.failed => (l10n.failed, BadgeTone.failure),
     };
+
+    final typeLabel = isCredit ? l10n.credit : l10n.debit;
+    final directionLabel = isCredit ? l10n.from : l10n.to.toLowerCase();
 
     return Semantics(
       label:
-          '${isCredit ? 'Credit' : 'Debit'} of ${money.format()} ${isCredit ? 'from' : 'to'} ${transaction.beneficiary}'
-          '${badgeLabel != null ? ', $badgeLabel' : ''}',
+          l10n.transactionSemantics(
+            typeLabel,
+            money.format(),
+            directionLabel,
+            transaction.beneficiary,
+          ) +
+          (badgeLabel != null ? ', $badgeLabel' : ''),
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
@@ -78,7 +88,7 @@ class TransactionTile extends StatelessWidget {
                       minimumSize: const Size(0, 24),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text('Retry', style: TextStyle(fontSize: 12)),
+                    child: Text(l10n.retry, style: const TextStyle(fontSize: 12)),
                   ),
               ],
             ),

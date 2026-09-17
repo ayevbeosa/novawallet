@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/money/money.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/glow_card.dart';
@@ -18,6 +19,7 @@ class GoalCard extends StatelessWidget {
     final saved = Money.fromKobo(data.displaySavedAmount);
     final target = Money.fromKobo(goal.targetAmount);
     final progress = saved.progressTowards(target);
+    final l10n = AppLocalizations.of(context)!;
 
     return InkWell(
       onTap: onTap,
@@ -34,11 +36,11 @@ class GoalCard extends StatelessWidget {
                   child: Text(goal.name, style: Theme.of(context).textTheme.titleLarge),
                 ),
                 if (data.hasPendingContribution)
-                  const StatusBadge(label: 'Pending', tone: BadgeTone.pending)
+                  StatusBadge(label: l10n.pending, tone: BadgeTone.pending)
                 else if (data.hasFailedContribution)
-                  const StatusBadge(label: 'Failed', tone: BadgeTone.failure)
+                  StatusBadge(label: l10n.failed, tone: BadgeTone.failure)
                 else if (data.displaySavedAmount >= goal.targetAmount)
-                  const StatusBadge(label: 'Reached', tone: BadgeTone.success),
+                  StatusBadge(label: l10n.reached, tone: BadgeTone.success),
               ],
             ),
             const SizedBox(height: 12),
@@ -47,8 +49,8 @@ class GoalCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${saved.format()} saved', style: const TextStyle(color: AppColors.textSecondary)),
-                Text('${(progress * 100).round()}% of ${target.format()}'),
+                Text(l10n.savedAmount(saved.format()), style: const TextStyle(color: AppColors.textSecondary)),
+                Text(l10n.progressOfTarget((progress * 100).round(), target.format())),
               ],
             ),
           ],

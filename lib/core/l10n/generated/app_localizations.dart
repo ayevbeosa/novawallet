@@ -98,6 +98,246 @@ abstract class AppLocalizations {
     Locale('yo'),
   ];
 
+  /// No description provided for @appTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'NovaWallet'**
+  String get appTitle;
+
+  /// No description provided for @novaSave.
+  ///
+  /// In en, this message translates to:
+  /// **'NovaSave'**
+  String get novaSave;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get recentActivity;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @noTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions yet'**
+  String get noTransactions;
+
+  /// No description provided for @createSavingsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a savings goal'**
+  String get createSavingsGoal;
+
+  /// No description provided for @noGoalsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No savings goals yet — create one'**
+  String get noGoalsYet;
+
+  /// No description provided for @goalNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal not found'**
+  String get goalNotFound;
+
+  /// No description provided for @ofTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'of {target} target'**
+  String ofTarget(String target);
+
+  /// No description provided for @percentComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% complete'**
+  String percentComplete(int percent);
+
+  /// No description provided for @goalReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal reached! 🎉'**
+  String get goalReached;
+
+  /// No description provided for @leftToReachTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'{remaining} left to reach your target'**
+  String leftToReachTarget(String remaining);
+
+  /// No description provided for @targetDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target date: {date}'**
+  String targetDateLabel(String date);
+
+  /// No description provided for @contribute.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribute'**
+  String get contribute;
+
+  /// No description provided for @newSavingsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'New savings goal'**
+  String get newSavingsGoal;
+
+  /// No description provided for @goalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal name'**
+  String get goalName;
+
+  /// No description provided for @goalNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Japa fund'**
+  String get goalNameHint;
+
+  /// No description provided for @targetAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Target amount'**
+  String get targetAmount;
+
+  /// No description provided for @pickTargetDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a target date'**
+  String get pickTargetDate;
+
+  /// No description provided for @targetDateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Target date'**
+  String get targetDateHint;
+
+  /// No description provided for @createGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Create goal'**
+  String get createGoal;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @languagePersist.
+  ///
+  /// In en, this message translates to:
+  /// **'Persists on this device and survives an app restart.'**
+  String get languagePersist;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @confirmContribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm contribution'**
+  String get confirmContribution;
+
+  /// No description provided for @contributionQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribution queued'**
+  String get contributionQueued;
+
+  /// No description provided for @reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Reached'**
+  String get reached;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// No description provided for @credit.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit'**
+  String get credit;
+
+  /// No description provided for @debit.
+  ///
+  /// In en, this message translates to:
+  /// **'Debit'**
+  String get debit;
+
+  /// No description provided for @allTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'All transactions'**
+  String get allTransactions;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @savedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} saved'**
+  String savedAmount(String amount);
+
+  /// No description provided for @progressOfTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of {target}'**
+  String progressOfTarget(int percent, String target);
+
+  /// No description provided for @offlineBannerPending.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline — {count} {count, plural, =1{action} other{actions}} pending, will send when back online'**
+  String offlineBannerPending(int count);
+
+  /// No description provided for @offlineBannerQueueing.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline — actions will queue and send when back online'**
+  String get offlineBannerQueueing;
+
   /// No description provided for @sendMoneyTitle.
   ///
   /// In en, this message translates to:
@@ -157,6 +397,71 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sent successfully'**
   String get sendSuccess;
+
+  /// No description provided for @accountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account number'**
+  String get accountNumber;
+
+  /// No description provided for @noteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get noteOptional;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @stepProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String stepProgress(int step, int total);
+
+  /// No description provided for @sendResultOfflineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your transfer to {recipient} is queued locally and hasn\'t left the device yet.'**
+  String sendResultOfflineBody(String recipient);
+
+  /// No description provided for @sendResultOnlineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your transfer to {recipient} has been queued and will confirm in a moment.'**
+  String sendResultOnlineBody(String recipient);
+
+  /// No description provided for @transactionSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{type} of {amount} {direction} {beneficiary}'**
+  String transactionSemantics(
+    String type,
+    String amount,
+    String direction,
+    String beneficiary,
+  );
+
+  /// No description provided for @from.
+  ///
+  /// In en, this message translates to:
+  /// **'from'**
+  String get from;
 }
 
 class _AppLocalizationsDelegate

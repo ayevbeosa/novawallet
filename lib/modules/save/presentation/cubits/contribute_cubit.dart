@@ -24,7 +24,7 @@ class ContributeCubit extends CubitSignal<ContributeState> {
   Future<void> submit() async {
     if (value.isSubmitting || value.outcome != null) return;
     if (value.amount <= 0) {
-      emit(value.copyWith(validationError: 'Enter an amount greater than ₦0'));
+      emit(value.copyWith(validationError: 'errorAmountZero'));
       return;
     }
     emit(value.copyWith(isSubmitting: true, clearValidationError: true));

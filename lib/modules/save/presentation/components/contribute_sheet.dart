@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:novawallet/core/di/service_locator.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/amount_field.dart';
 import 'package:novawallet/modules/save/presentation/cubits/contribute_cubit.dart';
@@ -38,6 +39,7 @@ class _ContributeSheetState extends State<ContributeSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocSignalBuilder<ContributeCubit, ContributeState>(
       bloc: _cubit,
       builder: (context, state) {
@@ -60,7 +62,7 @@ class _ContributeSheetState extends State<ContributeSheet> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  offline ? 'Pending — will send when back online' : 'Contribution queued',
+                  offline ? l10n.pendingOffline : l10n.contributionQueued,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
@@ -70,7 +72,7 @@ class _ContributeSheetState extends State<ContributeSheet> {
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Done'),
+                    child: Text(l10n.done),
                   ),
                 ),
               ],
@@ -89,7 +91,7 @@ class _ContributeSheetState extends State<ContributeSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Contribute', style: Theme.of(context).textTheme.headlineSmall),
+              Text(l10n.contribute, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 16),
               AmountField(autofocus: true, onChangedKobo: _cubit.setAmountKobo),
               if (state.validationError != null) ...[
@@ -107,7 +109,7 @@ class _ContributeSheetState extends State<ContributeSheet> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Confirm contribution'),
+                      : Text(l10n.confirmContribution),
                 ),
               ),
             ],

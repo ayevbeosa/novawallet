@@ -1,5 +1,6 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/settings/locale_cubit.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 
@@ -15,9 +16,10 @@ class SettingsScreen extends StatelessWidget {
     final cubit = context.read<LocaleCubit>();
     final localeCode = context.value<LocaleCubit, String>();
     final selected = AppLanguage.fromCode(localeCode);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: SafeArea(
         child: RadioGroup(
           groupValue: selected,
@@ -28,13 +30,13 @@ class SettingsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               Text(
-                'Language',
+                l10n.language,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 4),
-              const Text(
-                'Persists on this device and survives an app restart.',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+              Text(
+                l10n.languagePersist,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
               ),
               const SizedBox(height: 12),
               ...AppLanguage.values.map(

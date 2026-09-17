@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 
 /// Persistent, accessible banner shown across the app while offline. Uses
@@ -12,6 +13,7 @@ class OfflineBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedSize(
       duration: const Duration(milliseconds: 250),
       child: visible
@@ -28,8 +30,8 @@ class OfflineBanner extends StatelessWidget {
                     Expanded(
                       child: Text(
                         pendingCount > 0
-                            ? "You're offline — $pendingCount action${pendingCount == 1 ? '' : 's'} pending, will send when back online"
-                            : "You're offline — actions will queue and send when back online",
+                            ? l10n.offlineBannerPending(pendingCount)
+                            : l10n.offlineBannerQueueing,
                         style: const TextStyle(
                           color: AppColors.gold,
                           fontSize: 13,

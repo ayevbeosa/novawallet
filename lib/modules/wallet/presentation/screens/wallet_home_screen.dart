@@ -1,6 +1,7 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/router/app_routes.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/modules/wallet/data/models/transaction_entry.dart';
@@ -16,6 +17,7 @@ class WalletHomeScreen extends StatelessWidget {
     final cubit = context.read<WalletCubit>();
     final state = context.value<WalletCubit, WalletState>();
     final data = state.data;
+    final l10n = AppLocalizations.of(context)!;
 
     return RefreshIndicator(
       color: AppColors.cyan,
@@ -26,11 +28,11 @@ class WalletHomeScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             floating: true,
-            title: const Text('NovaWallet'),
+            title: Text(l10n.appTitle),
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings_outlined),
-                tooltip: 'Settings',
+                tooltip: l10n.settings,
                 onPressed: () => context.push(AppRoutes.settings),
               ),
             ],
@@ -55,7 +57,7 @@ class WalletHomeScreen extends StatelessWidget {
                   Expanded(
                     child: _QuickActionButton(
                       icon: Icons.north_east_rounded,
-                      label: 'Send',
+                      label: l10n.send,
                       color: AppColors.cyan,
                       onTap: () => context.push(AppRoutes.send),
                     ),
@@ -64,7 +66,7 @@ class WalletHomeScreen extends StatelessWidget {
                   Expanded(
                     child: _QuickActionButton(
                       icon: Icons.savings_rounded,
-                      label: 'Save',
+                      label: l10n.save,
                       color: AppColors.magenta,
                       onTap: () => context.push(AppRoutes.createGoal),
                     ),
@@ -79,11 +81,11 @@ class WalletHomeScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Recent activity', style: Theme.of(context).textTheme.titleMedium),
+                  Text(l10n.recentActivity, style: Theme.of(context).textTheme.titleMedium),
                   if (data != null && data.transactions.isNotEmpty)
                     TextButton(
                       onPressed: () => context.push(AppRoutes.transactions),
-                      child: const Text('See all'),
+                      child: Text(l10n.seeAll),
                     ),
                 ],
               ),
@@ -91,9 +93,9 @@ class WalletHomeScreen extends StatelessWidget {
           ),
           const SliverPadding(padding: EdgeInsets.only(top: 8)),
           if (data == null || data.transactions.isEmpty)
-            const SliverFillRemaining(
+            SliverFillRemaining(
               hasScrollBody: false,
-              child: Center(child: Text('No transactions yet')),
+              child: Center(child: Text(l10n.noTransactions)),
             )
           else
             SliverPadding(

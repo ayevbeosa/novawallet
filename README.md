@@ -10,22 +10,22 @@ Targeted against **Flutter 3.44.8 / Dart 3.12.2** (stable channel).
 
 ```bash
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs   # dart_mappable + drift codegen
+dart run build_runner build --delete-conflicting-outputs   # drift codegen (app_database.g.dart)
 flutter gen-l10n                                            # only needed if you edit lib/core/l10n/*.arb
 flutter run
 ```
 
 That's the single command path (`flutter run`) once codegen has run once —
-codegen output is checked in under `lib/**/*.g.dart` / `*.mapper.dart` /
+codegen output is checked in under `lib/**/*.g.dart` /
 `lib/core/l10n/generated/`, so a plain `flutter pub get && flutter run` is
 enough for a normal checkout.
 
 ### Tests
 
 ```bash
-flutter test test/unit         # Money math, offline-queue engine (21 tests)
+flutter test test/unit         # Money math, pagination, offline-queue engine (26 tests)
 flutter test test/widget       # Send Money + NovaSave contribution flows (6 tests)
-flutter test integration_test  # offline-queue-then-sync, on a device/emulator (2 tests)
+flutter test integration_test  # offline-queue-then-sync, on a device/emulator
 ```
 
 All three suites were run and passed against an Android emulator
@@ -41,15 +41,16 @@ Module-first layout:
 lib/
   core/                     shared infrastructure — no dependency on modules/
     money/                  Money value type + Naira-input parser (kobo-exact)
-    connectivity/           ConnectivityService (connectivity_plus wrapper)
-    storage/                AppDatabase (Drift) — offline queue + cache tables
+    connectivity/           ConnectivityService (mobile/Wi-Fi only counts as "online")
+    database/               AppDatabase (Drift) — offline queue + cache tables
     sync/                   QueuedAction model + SyncQueueService (the drain engine)
     backend/                FakeNovaPayApi — the fake backend ("you own how you fake it")
     secure/                 SecureSessionStore (flutter_secure_storage)
-    notifications/          LocalNotificationService
+    notifications/          NotificationService (awesome_notifications)
+    settings/               LocaleCubit (hydrated) + SettingsScreen — persisted language
     theme/, widgets/        cyberpunk design system shared by both modules
     di/                     get_it composition root
-    router/, shell/, app/   go_router config, bottom-nav shell, root MaterialApp widget
+    router/, shell/         go_router config (StatefulShellRoute bottom-nav shell)
   modules/
     wallet/
       data/{models,repositories}/     WalletSnapshot, TransactionEntry, WalletRepository
@@ -57,6 +58,8 @@ lib/
     save/
       data/{models,repositories}/     SavingsGoal, SaveRepository
       presentation/{cubits,screens,components}/
+  app_providers.dart          long-lived cubits, provided above MaterialApp.router
+  nova_wallet_app.dart        root MaterialApp.router widget (theme, locale, routing)
   main.dart
 ```
 
@@ -65,7 +68,7 @@ engine, storage, connectivity, design system) and never imports from
 `modules/*`. Each module owns its domain models and the mapping between
 those models and Drift's generated row/companion types — `AppDatabase`
 itself only ever speaks in Drift's own types (see
-`core/storage/app_database.dart`'s doc comment), so it has zero
+`core/database/app_database.dart`'s doc comment), so it has zero
 compile-time knowledge of `WalletSnapshot` or `SavingsGoal`. The one
 exception is `core/backend/fake_novapay_api.dart`, which *does* import
 both modules' models — a fake backend client is realistically going to
@@ -76,24 +79,42 @@ oversight.
 ### State management — `bloc_signals` / `bloc_signals_flutter`
 
 Every screen's state is a `CubitSignal<State>` (synchronous `emit`, no
-`Stream` overhead) provided via `BlocSignalProvider` and read with
-`context.read<Cubit>()` (no rebuild) / `context.value<Cubit, State>()`
-(rebuild on state change). Long-lived cubits (`WalletCubit`,
-`SaveGoalsCubit`, `SyncStatusCubit`) are provided once at the shell level;
-per-flow cubits (`SendMoneyCubit`, `ContributeCubit`, `CreateGoalCubit`)
-are scoped to their screen/sheet and torn down with it, which is also what
-guarantees an idempotency key is only ever minted once per attempt (see
-below).
+`Stream` overhead), read with `context.read<Cubit>()` (no rebuild) /
+`context.value<Cubit, State>()` (rebuild on state change). Ownership
+follows the cubit's lifetime, not a blanket rule: long-lived,
+cross-screen cubits (`WalletCubit`, `SaveGoalsCubit`, `SyncStatusCubit`,
+`LocaleCubit`) are provided once via `BlocSignalProvider` in
+`app_providers.dart`, above `MaterialApp.router` — needed because
+top-level `go_router` routes replace the whole tree rather than nesting
+inside a shell, so anything provided only inside the shell isn't an
+ancestor of a pushed route. Per-flow cubits (`SendMoneyCubit`,
+`ContributeCubit`, `CreateGoalCubit`, `TransactionHistoryCubit`) are
+instead owned directly by their screen's `State` as a `late final` field,
+closed in `dispose()`, and passed straight to `BlocSignalBuilder(bloc:
+...)` — no extra wrapper widget just to host a provider. That per-flow
+ownership is also what guarantees an idempotency key is only ever minted
+once per attempt (see below).
 
-### Models — `dart_mappable`
+### Models — `Equatable`
 
 `TransactionEntry`, `WalletSnapshot`, `SavingsGoal`, and the queue's
 `QueuedAction` sealed hierarchy (`SendMoneyAction` / `ContributeGoalAction`)
-are `dart_mappable` classes — immutable, with generated `copyWith`/
-`toJson`/`fromJson`. `QueuedAction`'s JSON form is what gets persisted as
-the queue row's `payloadJson`, so replaying a queued action after an app
-restart means decoding exactly the same typed object that was enqueued,
-not re-deriving it from something else.
+are plain immutable classes extending `Equatable` (value equality via a
+`props` list) — none of them do their own JSON parsing, so there's no
+codegen dependency here. The queue table decomposes each `QueuedAction`
+into typed Drift columns instead of a serialized blob (`recipient`/
+`narration` for a send, `goalId`/`goalName` for a contribution, `amount`
+shared by both) — `AppDatabase.enqueueAction`/`decodeAction` convert
+directly between a row and the matching subtype. Cubit `State` classes are
+`Equatable` too, so `BlocSignalBuilder` only rebuilds on an actual value
+change, not every `emit`.
+
+`GoalViewData` vs `SavingsGoal`: the same split as `WalletData`/
+`WalletSnapshot` on the wallet side — `SavingsGoal` is the persisted
+domain model (what `AppDatabase`/`SaveRepository` read and write),
+`GoalViewData` is a screen-shaped projection of it (e.g. pre-computed
+progress percentage, formatted target date) built for one screen's
+`build()` rather than re-derived inline every rebuild.
 
 ### Dependency injection — `get_it`
 
@@ -109,7 +130,14 @@ arithmetic operation, the `format()` display path, and
 `progressTowards()` (goal completion %) stay in integer space — `format()`
 splits Naira/kobo with `~/` and `%`, never by dividing to a `double`.
 `parseNairaInputToKobo()` parses what the user types the same way: string
-splitting and `int.parse`, never `double.parse`. The only place a `double`
+splitting and `int.parse`, never `double.parse`. `AmountField`
+(`core/widgets/amount_field.dart`) uses `currency_text_input_formatter` to
+auto-format the field live as digits are typed (`0.00 → 0.01 → 0.10 →
+1.00 → 10.02`) — but that package's own `getUnformattedValue()`/
+`getDouble()` divides by a power of 10 to return a `double`, so the kobo
+value is instead derived by re-parsing the formatter's own *formatted
+string* through `parseNairaInputToKobo()`, keeping the double entirely
+out of the money path. The only place a `double`
 touches money at all is `Money.fromNaira()`, used solely for seed data in
 tests — documented on the constructor as exactly that, not part of the
 runtime path. See `test/unit/money_test.dart` for the drift cases this is
@@ -184,10 +212,50 @@ it's recomputed from the two sources of truth every time either changes.
 
 ### Navigation — `go_router`
 
-Four routes (`/`, `/send`, `/save/create`, `/save/:goalId`) plus a local
-`IndexedStack` for the Wallet/NovaSave bottom-tab shell (`core/shell/
-app_shell.dart`) — a `StatefulShellRoute` wasn't worth the extra
-complexity for two tabs on this timeline.
+A `StatefulShellRoute.indexedStack` (`core/shell/app_shell.dart`) hosts the
+Wallet/NovaSave bottom-tab shell, so each tab keeps its own navigation
+state; `/settings`, `/send`, `/wallet/transactions`, `/save/create`, and
+`/save/:goalId` are top-level routes pushed on top of it. Route paths are
+named constants in `core/router/app_routes.dart` rather than inline
+strings.
+
+### Prominent primary actions
+
+Send and Save are a `Row` of two equal, labelled buttons directly under
+the balance card on the wallet home screen — not buried in `AppBar.
+actions` — and NovaSave's goal list leads with a full-width "Create a
+savings goal" `ElevatedButton.icon`, not a small `+` icon. The settings
+gear is the only remaining `AppBar` action.
+
+### Transaction history — pagination
+
+The wallet home screen shows only the last 10 transactions
+(`watchRecentTransactionRows`) with a "See all" link to
+`TransactionHistoryScreen`, which pages through the full history 20 rows
+at a time (`AppDatabase.transactionPage(page:, pageSize:)` +
+`transactionCount()` for the footer/end-of-list state), loading the next
+page as the `ScrollController` nears the bottom. `test/unit/
+transaction_pagination_test.dart` seeds 250 synthetic rows and asserts
+13 full pages with no gaps, no overlap, and newest-first ordering.
+
+### Settings — persisted language
+
+`LocaleCubit` (`core/settings/locale_cubit.dart`) is a
+`HydratedCubitSignal<String>` (`bloc_signals_hydrate`) — its language
+code is written to `SharedPreferences` on every `emit` and restored
+before the first frame (`HydratedStorage.storage` is set in `main()`
+before `runApp`), so a language choice made in `SettingsScreen` survives
+a full app restart. This is plain UI-preference data, not the sensitive
+data the brief's secure-storage constraint is about, so `SharedPreferences`
+is the right tool here (see the constraints table below for what that
+constraint actually covers). Switching to Yorùbá also required a real
+fix, not just wiring: Flutter's built-in `GlobalMaterialLocalizations`/
+`GlobalCupertinoLocalizations`/`GlobalWidgetsLocalizations` don't ship a
+Yoruba translation, so without an override the app crashes with "No
+MaterialLocalizations found" the instant the locale switches —
+`core/l10n/delegate/yoruba_delegate.dart` supplies real Yoruba framework
+strings via the `yoruba_localization` package, appended after the
+standard delegates so they win resolution for `yo`.
 
 ## Hard constraints — how each is met
 
@@ -197,8 +265,8 @@ complexity for two tabs on this timeline.
 | Queue survives restart, no double-send | `AppDatabase` (SQLite-backed), `SyncQueueService`, `integration_test/offline_queue_sync_test.dart` |
 | Accessible with a screen reader | `Semantics` on balance, transaction rows, step indicators, buttons, date picker, progress bar (`core/widgets/*`, screen files) |
 | Font-scale doesn't break layout | Balance figure wrapped in `FittedBox`; flexible `Row`/`Column`/`Flexible` layouts, no fixed-height text containers |
-| `ListView.builder` for large lists | `SliverList.builder` on the transaction list and goal list |
-| No sensitive data in plain `SharedPreferences` | `SecureSessionStore` (`flutter_secure_storage`, AES-GCM + RSA-OAEP key wrapping by default in v11) |
+| `ListView.builder` for large lists | `SliverList.builder` / `ListView.builder` on the transaction list, transaction history page, and goal list |
+| No sensitive data in plain `SharedPreferences` | `SecureSessionStore` (`flutter_secure_storage`, AES-GCM + RSA-OAEP key wrapping by default in v11). `SharedPreferences` is only used for the non-sensitive language preference (`LocaleCubit`) |
 
 ## Stretch goals attempted
 
@@ -206,15 +274,17 @@ Per the brief's own framing ("intentionally more than can be gold-plated"),
 these were prioritised over golden tests / a biometric stub, which were
 cut:
 
-- **Local notification on sync** — `LocalNotificationService`, fired from
-  `SyncQueueService.onActionSynced` (wired in the DI composition root).
-  Demoable: queue a send offline, background the app, reconnect, see the
-  notification.
-- **Localization scaffold (English + Yoruba)** — `lib/core/l10n/
-  app_en.arb` / `app_yo.arb`, wired into `MaterialApp.router` and used
-  throughout the Send Money screen (step titles, field labels, buttons,
-  the pending/sent outcome text). NovaSave and the wallet home screen are
-  still English-only, as scoped.
+- **Local notification on sync** — `NotificationService`
+  (`awesome_notifications`), fired from `SyncQueueService.onActionSynced`
+  (wired in the DI composition root). Demoable: queue a send offline,
+  background the app, reconnect, see the notification.
+- **Localization scaffold (English + Yoruba), with a Settings page to
+  switch and persist it** — `lib/core/l10n/app_en.arb` / `app_yo.arb`,
+  wired into `MaterialApp.router` and used throughout the Send Money
+  screen (step titles, field labels, buttons, the pending/sent outcome
+  text); the language itself is switched from `SettingsScreen` and
+  persisted via the hydrated `LocaleCubit` (see above). NovaSave and the
+  wallet home screen are still English-only, as scoped.
 
 ## Trade-offs & documented assumptions
 
@@ -248,11 +318,13 @@ cut:
 
 ## Test rigor
 
-- **Unit (`test/unit/`, 21 tests):** `Money`/`parseNairaInputToKobo`
-  (float-drift cases), and `SyncQueueService` in isolation — exactly-once
+- **Unit (`test/unit/`, 26 tests):** `Money`/`parseNairaInputToKobo`
+  (float-drift cases); `SyncQueueService` in isolation — exactly-once
   replay, double-enqueue dedup, offline/reconnect, a connectivity drop
   *mid-request*, business-failure backoff to a terminal `failed` state,
-  and two concurrent `drain()` calls racing on the same row.
+  and two concurrent `drain()` calls racing on the same row; and
+  transaction pagination against 250 seeded rows (count, page boundaries,
+  ordering, past-the-end).
 - **Widget (`test/widget/`, 6 tests):** the Send Money and NovaSave
   contribution flows end to end against a real in-memory `AppDatabase` and
   zero-latency `FakeNovaPayApi` — happy path, validation, and the offline

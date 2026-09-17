@@ -16,8 +16,9 @@ class StepDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Semantics(
-      label: 'Step ${step + 1} of $totalSteps',
+      label: l10n.stepProgress(step + 1, totalSteps),
       child: Row(
         children: List.generate(totalSteps, (i) {
           final active = i <= step;
@@ -68,7 +69,7 @@ class _RecipientStepState extends State<RecipientStep> {
           label: l10n.recipientLabel,
           autofocus: true,
           controller: _controller,
-          hintText: 'Account number',
+          hintText: l10n.accountNumber,
           textInputType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
@@ -103,9 +104,9 @@ class AmountStep extends StatelessWidget {
         const SizedBox(height: 16),
         Semantics(
           textField: true,
-          label: 'Note, optional',
+          label: l10n.noteOptional,
           child: TextField(
-            decoration: const InputDecoration(labelText: 'Note (optional)'),
+            decoration: InputDecoration(labelText: l10n.noteOptional),
             onChanged: cubit.setNote,
           ),
         ),
@@ -133,12 +134,12 @@ class ConfirmStep extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SummaryRow(label: 'To', value: state.recipient),
+              SummaryRow(label: l10n.to, value: state.recipient),
               const Divider(height: 24),
-              SummaryRow(label: 'Amount', value: money.format()),
+              SummaryRow(label: l10n.amount, value: money.format()),
               if (state.note != null && state.note!.trim().isNotEmpty) ...[
                 const Divider(height: 24),
-                SummaryRow(label: 'Note', value: state.note!),
+                SummaryRow(label: l10n.note, value: state.note!),
               ],
             ],
           ),

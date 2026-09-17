@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:novawallet/core/di/service_locator.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/amount_field.dart';
 import 'package:novawallet/core/widgets/app_text_form_field.dart';
@@ -32,6 +33,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocSignalBuilder<CreateGoalCubit, CreateGoalState>(
       bloc: _cubit,
       builder: (context, state) {
@@ -42,7 +44,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
         }
 
         return Scaffold(
-          appBar: AppBar(title: const Text('New savings goal')),
+          appBar: AppBar(title: Text(l10n.newSavingsGoal)),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -50,23 +52,23 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppTextFormField(
-                    label: 'Goal name',
+                    label: l10n.goalName,
                     controller: _nameController,
-                    hintText: 'e.g. Japa fund',
+                    hintText: l10n.goalNameHint,
                     onChanged: _cubit.setName,
                     textCapitalization: TextCapitalization.sentences,
                   ),
                   const SizedBox(height: 16),
                   AmountField(
-                    label: 'Target amount',
+                    label: l10n.targetAmount,
                     onChangedKobo: _cubit.setTargetAmountKobo,
                   ),
                   const SizedBox(height: 16),
                   AppTextFormField(
                     controller: _dateController,
                     readOnly: true,
-                    label: 'Pick a target date',
-                    hintText: 'Target date',
+                    label: l10n.pickTargetDate,
+                    hintText: l10n.targetDateHint,
                     prefixIcon: const Icon(Icons.calendar_month_rounded),
                     onTap: () async {
                       final now = DateTime.now();
@@ -97,7 +99,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Create goal'),
+                          : Text(l10n.createGoal),
                     ),
                   ),
                 ],

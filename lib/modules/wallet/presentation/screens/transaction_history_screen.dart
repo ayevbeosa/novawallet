@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:novawallet/core/di/service_locator.dart';
+import 'package:novawallet/core/l10n/generated/app_localizations.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/modules/wallet/data/repositories/wallet_repository.dart';
 import 'package:novawallet/modules/wallet/presentation/components/transaction_tile.dart';
@@ -42,8 +43,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('All transactions')),
+      appBar: AppBar(title: Text(l10n.allTransactions)),
       body: RefreshIndicator(
         color: AppColors.cyan,
         backgroundColor: AppColors.surface,
@@ -55,7 +57,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             if (state.transactions.isEmpty) {
-              return const Center(child: Text('No transactions yet'));
+              return Center(child: Text(l10n.noTransactions));
             }
             return ListView.builder(
               controller: _scrollController,
@@ -86,6 +88,7 @@ class _FooterIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.errorMessage != null) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -93,7 +96,7 @@ class _FooterIndicator extends StatelessWidget {
           children: [
             Text(state.errorMessage!, style: const TextStyle(color: AppColors.red)),
             const SizedBox(height: 8),
-            TextButton(onPressed: onRetry, child: const Text('Retry')),
+            TextButton(onPressed: onRetry, child: Text(l10n.retry)),
           ],
         ),
       );

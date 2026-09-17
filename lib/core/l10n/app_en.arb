@@ -1,5 +1,97 @@
 {
   "@@locale": "en",
+  "appTitle": "NovaWallet",
+  "novaSave": "NovaSave",
+  "settings": "Settings",
+  "send": "Send",
+  "save": "Save",
+  "recentActivity": "Recent activity",
+  "seeAll": "See all",
+  "noTransactions": "No transactions yet",
+  "createSavingsGoal": "Create a savings goal",
+  "noGoalsYet": "No savings goals yet — create one",
+  "goalNotFound": "Goal not found",
+  "ofTarget": "of {target} target",
+  "@ofTarget": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "percentComplete": "{percent}% complete",
+  "@percentComplete": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "goalReached": "Goal reached! 🎉",
+  "leftToReachTarget": "{remaining} left to reach your target",
+  "@leftToReachTarget": {
+    "placeholders": {
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
+  "targetDateLabel": "Target date: {date}",
+  "@targetDateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "contribute": "Contribute",
+  "newSavingsGoal": "New savings goal",
+  "goalName": "Goal name",
+  "goalNameHint": "e.g. Japa fund",
+  "targetAmount": "Target amount",
+  "pickTargetDate": "Pick a target date",
+  "targetDateHint": "Target date",
+  "createGoal": "Create goal",
+  "language": "Language",
+  "languagePersist": "Persists on this device and survives an app restart.",
+  "done": "Done",
+  "confirmContribution": "Confirm contribution",
+  "contributionQueued": "Contribution queued",
+  "reached": "Reached",
+  "pending": "Pending",
+  "failed": "Failed",
+  "credit": "Credit",
+  "debit": "Debit",
+  "allTransactions": "All transactions",
+  "retry": "Retry",
+  "savedAmount": "{amount} saved",
+  "@savedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "progressOfTarget": "{percent}% of {target}",
+  "@progressOfTarget": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "offlineBannerPending": "You're offline — {count} {count, plural, =1{action} other{actions}} pending, will send when back online",
+  "@offlineBannerPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineBannerQueueing": "You're offline — actions will queue and send when back online",
   "sendMoneyTitle": "Send Money",
   "recipientStepTitle": "Who are you sending to?",
   "amountStepTitle": "How much?",
@@ -9,5 +101,60 @@
   "continueButton": "Continue",
   "confirmSendButton": "Confirm & Send",
   "pendingOffline": "Pending — will send when back online",
-  "sendSuccess": "Sent successfully"
+  "sendSuccess": "Sent successfully",
+  "accountNumber": "Account number",
+  "noteOptional": "Note (optional)",
+  "to": "To",
+  "amount": "Amount",
+  "note": "Note",
+  "stepProgress": "Step {step} of {total}",
+  "@stepProgress": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sendResultOfflineBody": "Your transfer to {recipient} is queued locally and hasn't left the device yet.",
+  "@sendResultOfflineBody": {
+    "placeholders": {
+      "recipient": {
+        "type": "String"
+      }
+    }
+  },
+  "sendResultOnlineBody": "Your transfer to {recipient} has been queued and will confirm in a moment.",
+  "@sendResultOnlineBody": {
+    "placeholders": {
+      "recipient": {
+        "type": "String"
+      }
+    }
+  },
+  "transactionSemantics": "{type} of {amount} {direction} {beneficiary}",
+  "@transactionSemantics": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "direction": {
+        "type": "String"
+      },
+      "beneficiary": {
+        "type": "String"
+      }
+    }
+  },
+  "from": "from",
+  "errorValidRecipient": "Enter a valid recipient",
+  "errorAmountZero": "Enter an amount greater than ₦0",
+  "errorGoalName": "Give your goal a name",
+  "errorTargetAmount": "Set a target amount greater than ₦0",
+  "errorTargetDate": "Pick a target date"
 }
