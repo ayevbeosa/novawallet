@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:novawallet/core/backend/novapay_exceptions.dart';
 import 'package:novawallet/core/sync/queued_action.dart';
 import 'package:novawallet/modules/save/data/models/savings_goal.dart';
-import 'package:novawallet/modules/wallet/data/models/transaction_entry.dart';
-import 'package:novawallet/modules/wallet/data/models/wallet_snapshot.dart';
+import 'package:novawallet/modules/wallet/data/models/transaction_entry/transaction_entry.dart';
+import 'package:novawallet/modules/wallet/data/models/wallet_snapshot/wallet_snapshot.dart';
 
 /// Stands in for the real NovaPay backend (NIBSS NIP rails, NovaSave
 /// ledger). No real network calls happen here.
@@ -52,8 +52,8 @@ class FakeNovaPayApi {
     _transactions.addAll([
       TransactionEntry(
         id: 'seed-1',
-        direction: TransactionDirection.credit,
-        counterparty: 'Diaspora remittance — UK',
+        transactionType: TransactionType.credit,
+        beneficiary: 'Diaspora remittance — UK',
         amount: 8500000,
         createdAt: now.subtract(const Duration(hours: 3)),
         status: TransactionStatus.completed,
@@ -61,16 +61,16 @@ class FakeNovaPayApi {
       ),
       TransactionEntry(
         id: 'seed-2',
-        direction: TransactionDirection.debit,
-        counterparty: 'Ikeja Electric — bill payment',
+        transactionType: TransactionType.debit,
+        beneficiary: 'Ikeja Electric — bill payment',
         amount: 1250000,
         createdAt: now.subtract(const Duration(hours: 9)),
         status: TransactionStatus.completed,
       ),
       TransactionEntry(
         id: 'seed-3',
-        direction: TransactionDirection.debit,
-        counterparty: 'Chidinma Okafor',
+        transactionType: TransactionType.debit,
+        beneficiary: 'Chidinma Okafor',
         amount: 500000,
         createdAt: now.subtract(const Duration(days: 1, hours: 2)),
         status: TransactionStatus.completed,
@@ -78,16 +78,16 @@ class FakeNovaPayApi {
       ),
       TransactionEntry(
         id: 'seed-4',
-        direction: TransactionDirection.debit,
-        counterparty: 'MTN — airtime top-up',
+        transactionType: TransactionType.debit,
+        beneficiary: 'MTN — airtime top-up',
         amount: 200000,
         createdAt: now.subtract(const Duration(days: 2)),
         status: TransactionStatus.completed,
       ),
       TransactionEntry(
         id: 'seed-5',
-        direction: TransactionDirection.credit,
-        counterparty: 'NovaBiz settlement — Iyamu Stores',
+        transactionType: TransactionType.credit,
+        beneficiary: 'NovaBiz settlement — Iyamu Stores',
         amount: 3400000,
         createdAt: now.subtract(const Duration(days: 3, hours: 5)),
         status: TransactionStatus.completed,
@@ -114,9 +114,9 @@ class FakeNovaPayApi {
   Future<WalletSnapshot> fetchWallet() async {
     await _delay();
     return WalletSnapshot(
-      balanceKobo: _balance,
+      balance: _balance,
       accountNumber: accountNumber,
-      ownerName: ownerName,
+      accountName: ownerName,
       updatedAt: DateTime.now(),
     );
   }
@@ -152,8 +152,8 @@ class FakeNovaPayApi {
     _balance -= action.amount;
     final tx = TransactionEntry(
       id: action.idempotencyKey,
-      direction: TransactionDirection.debit,
-      counterparty: action.recipient,
+      transactionType: TransactionType.debit,
+      beneficiary: action.recipient,
       amount: action.amount,
       createdAt: DateTime.now(),
       status: TransactionStatus.completed,
