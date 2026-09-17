@@ -177,6 +177,17 @@ class FakeNovaPayApi {
     if (action.amount > _balance) throw InsufficientFundsException();
 
     _balance -= action.amount;
+    final tx = TransactionEntry(
+      id: action.idempotencyKey,
+      transactionType: TransactionType.debit,
+      beneficiary: 'NovaSave — ${action.goalName}',
+      amount: action.amount,
+      createdAt: DateTime.now(),
+      status: TransactionStatus.completed,
+      narration: 'Savings contribution',
+    );
+    _transactions.insert(0, tx);
+
     final updated = goal.copyWith(savedAmount: goal.savedAmount + action.amount);
     _goals[action.goalId] = updated;
     _processedContributionKeys[action.idempotencyKey] = updated;

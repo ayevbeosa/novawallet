@@ -32,22 +32,39 @@ class WalletRepository {
         final wallet = walletRow == null ? null : WalletSnapshot.fromRow(walletRow);
         final transactions = transactionRows.map(TransactionEntry.fromRow).toList();
 
-        final pendingSends = queue.where((r) => r.actionType == 'send_money' && r.status != 'synced').toList();
-        final pendingKobo = pendingSends.fold<int>(0, (sum, row) {
-          final action = _db.decodeAction(row) as SendMoneyAction;
-          return sum + action.amount;
+        final pendingDebits = queue
+            .where((r) => (r.actionType == 'send_money' || r.actionType == 'contribute_goal') && r.status != 'synced')
+            .toList();
+        final pendingKobo = pendingDebits.fold<int>(0, (sum, row) {
+          final action = _db.decodeAction(row);
+          final amount = switch (action) {
+            final SendMoneyAction a => a.amount,
+            final ContributeGoalAction a => a.amount,
+          };
+          return sum + amount;
         });
-        final pendingEntries = pendingSends.map((row) {
-          final action = _db.decodeAction(row) as SendMoneyAction;
-          return TransactionEntry(
-            id: action.idempotencyKey,
-            transactionType: TransactionType.debit,
-            beneficiary: action.recipient,
-            amount: action.amount,
-            createdAt: action.createdAt,
-            status: row.status == 'failed' ? TransactionStatus.failed : TransactionStatus.pending,
-            narration: action.narration,
-          );
+        final pendingEntries = pendingDebits.map((row) {
+          final action = _db.decodeAction(row);
+          return switch (action) {
+            final SendMoneyAction a => TransactionEntry(
+              id: a.idempotencyKey,
+              transactionType: TransactionType.debit,
+              beneficiary: a.recipient,
+              amount: a.amount,
+              createdAt: a.createdAt,
+              status: row.status == 'failed' ? TransactionStatus.failed : TransactionStatus.pending,
+              narration: a.narration,
+            ),
+            final ContributeGoalAction a => TransactionEntry(
+              id: a.idempotencyKey,
+              transactionType: TransactionType.debit,
+              beneficiary: 'NovaSave — ${a.goalName}',
+              amount: a.amount,
+              createdAt: a.createdAt,
+              status: row.status == 'failed' ? TransactionStatus.failed : TransactionStatus.pending,
+              narration: 'Savings contribution',
+            ),
+          };
         }).toList();
 
         return WalletData(

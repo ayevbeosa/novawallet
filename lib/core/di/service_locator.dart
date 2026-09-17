@@ -66,6 +66,7 @@ Future<void> setupServiceLocator({
           unawaited(walletRepository.refresh());
         case ContributeGoalAction _:
           unawaited(saveRepository.refresh());
+          unawaited(walletRepository.refresh());
       }
       final body = switch (action) {
         final SendMoneyAction a => 'Your transfer to ${a.recipient} went through.',
