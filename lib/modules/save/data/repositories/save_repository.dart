@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:novawallet/core/backend/fake_novapay_api.dart';
-import 'package:novawallet/core/storage/app_database.dart';
+import 'package:novawallet/core/database/app_database.dart';
 import 'package:novawallet/core/sync/queued_action.dart';
 import 'package:novawallet/core/sync/sync_queue_service.dart' show SyncQueueService;
 import 'package:novawallet/modules/save/data/models/goal_view_data.dart';
@@ -25,7 +25,7 @@ class SaveRepository {
       _db.watchGoalRows(),
       _db.watchQueue(),
       (goalRows, queue) {
-        final goals = goalRows.map(_goalFromRow).toList();
+        final goals = goalRows.map(SavingsGoal.fromRow).toList();
         return goals.map((goal) {
           final pendingRows = queue
               .where(
@@ -41,7 +41,7 @@ class SaveRepository {
           );
           return GoalViewData(
             goal: goal,
-            displaySavedAmountKobo: goal.savedAmount + pendingKobo,
+            displaySavedAmount: goal.savedAmount + pendingKobo,
             hasPendingContribution: pendingRows.any((r) => r.status == 'pending' || r.status == 'syncing'),
             hasFailedContribution: pendingRows.any((r) => r.status == 'failed'),
           );
@@ -51,12 +51,12 @@ class SaveRepository {
   }
 
   /// Pulls fresh goal balances from the backend. Also called (via
-  /// `AppServices`' [SyncQueueService.onActionSynced] wiring) right after a
-  /// queued contribution confirms.
+  /// [SyncQueueService.onActionSynced] wiring in the DI composition root)
+  /// right after a queued contribution confirms.
   Future<void> refresh() async {
     final goals = await _api.fetchGoals();
     for (final goal in goals) {
-      await _db.upsertGoalRow(_goalToCompanion(goal));
+      await _db.upsertGoalRow(goal.toCompanion);
     }
   }
 
@@ -78,7 +78,7 @@ class SaveRepository {
       targetDate: targetDate,
       createdAt: DateTime.now(),
     );
-    await _db.upsertGoalRow(_goalToCompanion(goal));
+    await _db.upsertGoalRow(goal.toCompanion);
     unawaited(_api.createGoal(goal));
     return goal;
   }
@@ -101,22 +101,4 @@ class SaveRepository {
   }
 
   Future<void> retryFailed(String idempotencyKey) => _db.retryFailedAction(idempotencyKey);
-
-  SavingsGoal _goalFromRow(SavingsGoalRow row) => SavingsGoal(
-    id: row.id,
-    name: row.name,
-    targetAmount: row.targetAmountKobo,
-    savedAmount: row.savedAmountKobo,
-    targetDate: row.targetDate,
-    createdAt: row.createdAt,
-  );
-
-  SavingsGoalRowsCompanion _goalToCompanion(SavingsGoal goal) => SavingsGoalRowsCompanion.insert(
-    id: goal.id,
-    name: goal.name,
-    targetAmountKobo: goal.targetAmount,
-    savedAmountKobo: goal.savedAmount,
-    targetDate: goal.targetDate,
-    createdAt: goal.createdAt,
-  );
 }

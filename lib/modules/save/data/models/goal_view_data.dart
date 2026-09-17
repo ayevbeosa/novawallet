@@ -1,19 +1,19 @@
+import 'package:equatable/equatable.dart';
 import 'package:novawallet/modules/save/data/models/savings_goal.dart';
-import 'package:novawallet/modules/wallet/data/repositories/wallet_repository.dart';
 
-/// One goal's card on the NovaSave screen: the confirmed cached amount plus
-/// any contribution still sitting in the queue, computed fresh the same way
-/// [WalletRepository] derives the wallet balance — never mutated in place.
-class GoalViewData {
+class GoalViewData extends Equatable {
   const GoalViewData({
     required this.goal,
-    required this.displaySavedAmountKobo,
+    required this.displaySavedAmount,
     required this.hasPendingContribution,
     required this.hasFailedContribution,
   });
 
   final SavingsGoal goal;
-  final int displaySavedAmountKobo;
+  final int displaySavedAmount;
   final bool hasPendingContribution;
   final bool hasFailedContribution;
+
+  @override
+  List<Object?> get props => [goal, displaySavedAmount, hasPendingContribution, hasFailedContribution];
 }
