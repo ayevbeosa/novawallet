@@ -7,7 +7,9 @@ import 'package:novawallet/core/backend/fake_novapay_api.dart' show FakeNovaPayA
 /// attempt with backoff rather than silently re-queuing forever.
 class NovaPayServerException implements Exception {
   NovaPayServerException(this.message);
+
   final String message;
+
   @override
   String toString() => 'NovaPayServerException: $message';
 }
@@ -20,4 +22,8 @@ class InsufficientFundsException implements Exception {
 class GoalNotFoundException implements Exception {
   @override
   String toString() => 'GoalNotFoundException: savings goal no longer exists';
+}
+
+class ConnectivityLostMidRequest implements Exception {
+  const ConnectivityLostMidRequest();
 }
