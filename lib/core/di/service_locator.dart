@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:novawallet/core/backend/fake_novapay_api.dart';
 import 'package:novawallet/core/connectivity/connectivity_service.dart';
-import 'package:novawallet/core/notifications/local_notification_service.dart';
+import 'package:novawallet/core/database/app_database.dart';
+import 'package:novawallet/core/notifications/notification_service.dart';
 import 'package:novawallet/core/secure/secure_session_store.dart';
-import 'package:novawallet/core/storage/app_database.dart';
 import 'package:novawallet/core/sync/queued_action.dart';
 import 'package:novawallet/core/sync/sync_queue_service.dart';
 import 'package:novawallet/modules/save/data/repositories/save_repository.dart';
@@ -30,7 +30,7 @@ Future<void> setupServiceLocator({
 
   await resolvedConnectivity.initialize();
 
-  final notifications = LocalNotificationService();
+  final notifications = NotificationService();
   await notifications.initialize();
 
   final secureStore = SecureSessionStore();
@@ -42,7 +42,7 @@ Future<void> setupServiceLocator({
     ..registerSingleton<FakeNovaPayApi>(resolvedApi)
     ..registerSingleton<ConnectivityService>(resolvedConnectivity)
     ..registerSingleton<SecureSessionStore>(secureStore)
-    ..registerSingleton<LocalNotificationService>(notifications)
+    ..registerSingleton<NotificationService>(notifications)
     ..registerSingleton<WalletRepository>(
       WalletRepository(db: resolvedDb, api: resolvedApi),
     )
@@ -69,8 +69,7 @@ Future<void> setupServiceLocator({
       }
       final body = switch (action) {
         final SendMoneyAction a => 'Your transfer to ${a.recipient} went through.',
-        final ContributeGoalAction a =>
-          'Your contribution to "${a.goalName}" went through.',
+        final ContributeGoalAction a => 'Your contribution to "${a.goalName}" went through.',
       };
       unawaited(notifications.showSynced(title: 'Back online — synced', body: body));
     },

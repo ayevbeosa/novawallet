@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:novawallet/core/backend/novapay_exceptions.dart';
 import 'package:novawallet/core/sync/queued_action.dart';
 import 'package:novawallet/modules/save/data/models/savings_goal.dart';
-import 'package:novawallet/modules/wallet/data/models/transaction_entry/transaction_entry.dart';
-import 'package:novawallet/modules/wallet/data/models/wallet_snapshot/wallet_snapshot.dart';
+import 'package:novawallet/modules/wallet/data/models/transaction_entry.dart';
+import 'package:novawallet/modules/wallet/data/models/wallet_snapshot.dart';
 
 /// Stands in for the real NovaPay backend (NIBSS NIP rails, NovaSave
 /// ledger). No real network calls happen here.
