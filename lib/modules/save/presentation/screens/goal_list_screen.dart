@@ -1,6 +1,7 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:novawallet/core/router/app_routes.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/modules/save/presentation/components/goal_card.dart';
 import 'package:novawallet/modules/save/presentation/cubits/save_goals_cubit.dart';
@@ -30,7 +31,7 @@ class GoalListScreen extends StatelessWidget {
               child: SizedBox(
                 height: 52,
                 child: ElevatedButton.icon(
-                  onPressed: () => context.push('/save/create'),
+                  onPressed: () => context.push(AppRoutes.createGoal),
                   icon: const Icon(Icons.add_circle_outline_rounded),
                   label: const Text('Create a savings goal'),
                 ),
@@ -53,7 +54,7 @@ class GoalListScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: GoalCard(
                       data: goal,
-                      onTap: () => context.push('/save/${goal.goal.id}'),
+                      onTap: () => context.push(AppRoutes.goalDetailsWithId(goal.goal.id)),
                     ),
                   );
                 },

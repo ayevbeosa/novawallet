@@ -19,34 +19,36 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              'Language',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Persists on this device and survives an app restart.',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-            ),
-            const SizedBox(height: 12),
-            ...AppLanguage.values.map(
-              (language) => Card(
-                margin: const EdgeInsets.only(bottom: 10),
-                child: RadioListTile<AppLanguage>(
-                  value: language,
-                  groupValue: selected,
-                  onChanged: (value) {
-                    if (value != null) cubit.setLanguage(value);
-                  },
-                  title: Text(language.label),
-                  activeColor: AppColors.cyan,
+        child: RadioGroup(
+          groupValue: selected,
+          onChanged: (value) {
+            if (value != null) cubit.setLanguage(value);
+          },
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              Text(
+                'Language',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Persists on this device and survives an app restart.',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+              ),
+              const SizedBox(height: 12),
+              ...AppLanguage.values.map(
+                (language) => Card(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: RadioListTile<AppLanguage>(
+                    value: language,
+                    title: Text(language.label),
+                    activeColor: AppColors.cyan,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

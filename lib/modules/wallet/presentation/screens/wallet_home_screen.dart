@@ -1,6 +1,7 @@
 import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:novawallet/core/router/app_routes.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/modules/wallet/data/models/transaction_entry.dart';
 import 'package:novawallet/modules/wallet/presentation/components/balance_card.dart';
@@ -30,7 +31,7 @@ class WalletHomeScreen extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.settings_outlined),
                 tooltip: 'Settings',
-                onPressed: () => context.push('/settings'),
+                onPressed: () => context.push(AppRoutes.settings),
               ),
             ],
           ),
@@ -56,7 +57,7 @@ class WalletHomeScreen extends StatelessWidget {
                       icon: Icons.north_east_rounded,
                       label: 'Send',
                       color: AppColors.cyan,
-                      onTap: () => context.push('/send'),
+                      onTap: () => context.push(AppRoutes.send),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -65,7 +66,7 @@ class WalletHomeScreen extends StatelessWidget {
                       icon: Icons.savings_rounded,
                       label: 'Save',
                       color: AppColors.magenta,
-                      onTap: () => context.push('/save/create'),
+                      onTap: () => context.push(AppRoutes.createGoal),
                     ),
                   ),
                 ],
@@ -81,7 +82,7 @@ class WalletHomeScreen extends StatelessWidget {
                   Text('Recent activity', style: Theme.of(context).textTheme.titleMedium),
                   if (data != null && data.transactions.isNotEmpty)
                     TextButton(
-                      onPressed: () => context.push('/wallet/transactions'),
+                      onPressed: () => context.push(AppRoutes.transactions),
                       child: const Text('See all'),
                     ),
                 ],
@@ -152,7 +153,10 @@ class _QuickActionButton extends StatelessWidget {
               children: [
                 Icon(icon, color: color),
                 const SizedBox(height: 6),
-                Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+                Text(
+                  label,
+                  style: TextStyle(color: color, fontWeight: FontWeight.w600),
+                ),
               ],
             ),
           ),

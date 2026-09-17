@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:novawallet/core/l10n/generated/app_localizations.dart';
+import 'package:novawallet/core/router/app_routes.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/modules/wallet/presentation/cubits/send_money_cubit.dart';
 
@@ -44,7 +45,7 @@ class SendResultView extends StatelessWidget {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/'),
+                  onPressed: () => context.go(AppRoutes.wallet),
                   child: const Text('Done'),
                 ),
               ),
