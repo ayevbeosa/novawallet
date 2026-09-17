@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:novawallet/core/backend/fake_novapay_api.dart';
 import 'package:novawallet/core/backend/novapay_exceptions.dart';
 import 'package:novawallet/core/connectivity/connectivity_service.dart';
-import 'package:novawallet/core/storage/app_database.dart';
+import 'package:novawallet/core/database/app_database.dart';
 import 'package:novawallet/core/sync/queued_action.dart';
 
 /// Drains the offline action queue, one row at a time, and guarantees each

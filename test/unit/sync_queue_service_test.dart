@@ -2,7 +2,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:novawallet/core/backend/fake_novapay_api.dart';
 import 'package:novawallet/core/connectivity/connectivity_service.dart';
-import 'package:novawallet/core/storage/app_database.dart';
+import 'package:novawallet/core/database/app_database.dart';
 import 'package:novawallet/core/sync/queued_action.dart';
 import 'package:novawallet/core/sync/sync_queue_service.dart';
 
@@ -25,11 +25,11 @@ void main() {
   });
 
   SendMoneyAction sendAction(String key, {int amountKobo = 100000}) => SendMoneyAction(
-        idempotencyKey: key,
-        createdAt: DateTime.now(),
-        recipient: '0123456789',
-        amount: amountKobo,
-      );
+    idempotencyKey: key,
+    createdAt: DateTime.now(),
+    recipient: '0123456789',
+    amount: amountKobo,
+  );
 
   group('SyncQueueService', () {
     test('an action enqueued while already online syncs without a manual drain() call', () async {

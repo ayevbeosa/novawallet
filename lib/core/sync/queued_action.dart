@@ -1,6 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
-
-part 'queued_action.mapper.dart';
+import 'package:equatable/equatable.dart';
 
 /// Something the user asked the app to do that requires a round trip to the
 /// (fake) NovaPay backend — a send or a savings contribution.
@@ -9,16 +7,14 @@ part 'queued_action.mapper.dart';
 /// and travels with this action through every retry/replay so the backend
 /// (real or fake) can recognise a resend of the same attempt rather than a
 /// brand new one.
-@MappableClass(discriminatorKey: 'type')
-sealed class QueuedAction with QueuedActionMappable {
+sealed class QueuedAction extends Equatable {
   const QueuedAction({required this.idempotencyKey, required this.createdAt});
 
   final String idempotencyKey;
   final DateTime createdAt;
 }
 
-@MappableClass(discriminatorValue: 'send_money')
-class SendMoneyAction extends QueuedAction with SendMoneyActionMappable {
+class SendMoneyAction extends QueuedAction {
   const SendMoneyAction({
     required super.idempotencyKey,
     required super.createdAt,
@@ -30,10 +26,12 @@ class SendMoneyAction extends QueuedAction with SendMoneyActionMappable {
   final String recipient;
   final int amount;
   final String? narration;
+
+  @override
+  List<Object?> get props => [idempotencyKey, createdAt, recipient, amount, narration];
 }
 
-@MappableClass(discriminatorValue: 'contribute_goal')
-class ContributeGoalAction extends QueuedAction with ContributeGoalActionMappable {
+class ContributeGoalAction extends QueuedAction {
   const ContributeGoalAction({
     required super.idempotencyKey,
     required super.createdAt,
@@ -45,7 +43,9 @@ class ContributeGoalAction extends QueuedAction with ContributeGoalActionMappabl
   final String goalId;
   final String goalName;
   final int amount;
+
+  @override
+  List<Object?> get props => [idempotencyKey, createdAt, goalId, goalName, amount];
 }
 
-@MappableEnum()
 enum QueuedActionStatus { pending, syncing, synced, failed }
