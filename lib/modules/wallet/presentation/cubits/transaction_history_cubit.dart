@@ -18,7 +18,7 @@ class TransactionHistoryCubit extends CubitSignal<TransactionHistoryState> {
     try {
       await _repository.refresh();
       _nextPage = 0;
-      emit(const TransactionHistoryState(isLoadingFirstPage: true));
+      emit(const TransactionHistoryState());
       await loadNextPage();
     } on Exception {
       emit(
