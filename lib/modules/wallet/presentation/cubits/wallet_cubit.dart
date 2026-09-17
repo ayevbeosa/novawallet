@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_signals/bloc_signals.dart';
 import 'package:novawallet/core/connectivity/connectivity_service.dart';
-import 'package:novawallet/modules/wallet/data/models/wallet_data/wallet_data.dart';
+import 'package:novawallet/modules/wallet/data/models/wallet_data.dart';
 import 'package:novawallet/modules/wallet/data/repositories/wallet_repository.dart';
 
 class WalletState {

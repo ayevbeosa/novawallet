@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:novawallet/core/money/money.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
 import 'package:novawallet/core/widgets/status_badge.dart';
-import 'package:novawallet/modules/wallet/data/models/transaction_entry/transaction_entry.dart';
+import 'package:novawallet/modules/wallet/data/models/transaction_entry.dart';
 
 class TransactionTile extends StatelessWidget {
   const TransactionTile({required this.transaction, super.key, this.onRetry});

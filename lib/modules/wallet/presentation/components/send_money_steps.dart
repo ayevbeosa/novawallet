@@ -97,7 +97,7 @@ class AmountStep extends StatelessWidget {
         AmountField(
           label: l10n.amountLabel,
           autofocus: true,
-          onChangedKobo: (k) => cubit.setAmountKobo(k ?? 0),
+          onChangedKobo: cubit.setAmountKobo,
         ),
         const SizedBox(height: 16),
         Semantics(

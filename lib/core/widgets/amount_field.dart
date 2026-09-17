@@ -24,7 +24,7 @@ class AmountField extends StatelessWidget {
         spacing: 8,
         children: [
           Text(label),
-          TextField(
+          TextFormField(
             autofocus: autofocus,
             keyboardType: TextInputType.number,
             inputFormatters: [
@@ -39,7 +39,10 @@ class AmountField extends StatelessWidget {
               ),
             ],
             style: Theme.of(context).textTheme.headlineMedium,
-            decoration: const InputDecoration(prefixText: '₦ '),
+            decoration: const InputDecoration(
+              prefixText: '₦ ',
+              hintText: '0.00',
+            ),
           ),
         ],
       ),

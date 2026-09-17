@@ -2,7 +2,7 @@ import 'package:bloc_signals_flutter/bloc_signals_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:novawallet/core/theme/app_colors.dart';
-import 'package:novawallet/modules/wallet/data/models/transaction_entry/transaction_entry.dart';
+import 'package:novawallet/modules/wallet/data/models/transaction_entry.dart';
 import 'package:novawallet/modules/wallet/presentation/components/balance_card.dart';
 import 'package:novawallet/modules/wallet/presentation/components/transaction_tile.dart';
 import 'package:novawallet/modules/wallet/presentation/cubits/wallet_cubit.dart';
@@ -49,7 +49,17 @@ class WalletHomeScreen extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
-              child: Text('Recent activity', style: Theme.of(context).textTheme.titleMedium),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Recent activity', style: Theme.of(context).textTheme.titleMedium),
+                  if (data != null && data.transactions.isNotEmpty)
+                    TextButton(
+                      onPressed: () => context.push('/wallet/transactions'),
+                      child: const Text('See all'),
+                    ),
+                ],
+              ),
             ),
           ),
           const SliverPadding(padding: EdgeInsets.only(top: 8)),
