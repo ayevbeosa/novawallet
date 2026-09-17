@@ -121,4 +121,16 @@ class WalletRepository {
   }
 
   Future<void> retryFailed(String idempotencyKey) => _db.retryFailedAction(idempotencyKey);
+
+  /// Simulates an inbound credit (e.g. top-up). In a real app, this might
+  /// happen via a webview or an external payment provider, so we just
+  /// tell the fake backend and then refresh our local cache.
+  Future<void> addFunds({
+    required int amountKobo,
+    required String sender,
+    String? note,
+  }) async {
+    await _api.submitCredit(amount: amountKobo, sender: sender, narration: note);
+    await refresh();
+  }
 }

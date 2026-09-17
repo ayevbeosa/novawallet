@@ -9,11 +9,6 @@ import 'package:novawallet/modules/wallet/presentation/components/send_money_ste
 import 'package:novawallet/modules/wallet/presentation/components/send_result_view.dart';
 import 'package:novawallet/modules/wallet/presentation/cubits/send_money_cubit.dart';
 
-/// Owns its `SendMoneyCubit` directly (created via the `late final`
-/// initializer, closed in `dispose()`) instead of via `BlocSignalProvider`
-/// — this cubit exists for exactly one Send Money attempt on exactly this
-/// screen, so there's no ancestor lookup to set up for it, just a value
-/// handed straight to `BlocSignalBuilder`.
 class SendMoneyFlowScreen extends StatefulWidget {
   const SendMoneyFlowScreen({super.key});
 

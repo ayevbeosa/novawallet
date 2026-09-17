@@ -138,6 +138,27 @@ class FakeNovaPayApi {
     return goal;
   }
 
+  /// Manually credit the wallet (e.g. for a top-up or incoming transfer).
+  Future<TransactionEntry> submitCredit({
+    required int amount,
+    required String sender,
+    String? narration,
+  }) async {
+    await _delay();
+    _balance += amount;
+    final tx = TransactionEntry(
+      id: 'credit-${DateTime.now().millisecondsSinceEpoch}-${_random.nextInt(1000)}',
+      transactionType: TransactionType.credit,
+      beneficiary: sender,
+      amount: amount,
+      createdAt: DateTime.now(),
+      status: TransactionStatus.completed,
+      narration: narration,
+    );
+    _transactions.insert(0, tx);
+    return tx;
+  }
+
   /// Idempotent: replaying the same [SendMoneyAction.idempotencyKey] returns
   /// the original result instead of debiting the wallet again.
   Future<TransactionEntry> submitSendMoney(SendMoneyAction action) async {
