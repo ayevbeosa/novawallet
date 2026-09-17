@@ -34,8 +34,7 @@ Future<void> setupServiceLocator({
   await notifications.initialize();
 
   final secureStore = SecureSessionStore();
-  // Mock session token — demonstrates secure storage per the take-home's
-  // "no sensitive data in plain SharedPreferences" constraint.
+  // Mock session token
   await secureStore.saveMockToken('mock.jwt.${DateTime.now().millisecondsSinceEpoch}');
 
   getIt

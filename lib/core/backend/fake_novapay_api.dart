@@ -96,16 +96,16 @@ class FakeNovaPayApi {
     _goals['goal-1'] = SavingsGoal(
       id: 'goal-1',
       name: 'Japa fund',
-      targetAmountKobo: 250000000,
-      savedAmountKobo: 92500000,
+      targetAmount: 250000000,
+      savedAmount: 92500000,
       targetDate: now.add(const Duration(days: 200)),
       createdAt: now.subtract(const Duration(days: 40)),
     );
     _goals['goal-2'] = SavingsGoal(
       id: 'goal-2',
       name: 'New generator',
-      targetAmountKobo: 45000000,
-      savedAmountKobo: 12000000,
+      targetAmount: 45000000,
+      savedAmount: 12000000,
       targetDate: now.add(const Duration(days: 60)),
       createdAt: now.subtract(const Duration(days: 15)),
     );
@@ -177,7 +177,7 @@ class FakeNovaPayApi {
     if (action.amount > _balance) throw InsufficientFundsException();
 
     _balance -= action.amount;
-    final updated = goal.copyWith(savedAmountKobo: goal.savedAmountKobo + action.amount);
+    final updated = goal.copyWith(savedAmount: goal.savedAmount + action.amount);
     _goals[action.goalId] = updated;
     _processedContributionKeys[action.idempotencyKey] = updated;
     return updated;
